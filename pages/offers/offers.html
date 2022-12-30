@@ -1,0 +1,300 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="UTF-8" />
+        <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+        
+        <link
+            rel="icon"
+            type="image/x-icon"
+            href="../../favicon_io/favicon.ico"
+        />
+        <link
+            href="https://cdn.jsdelivr.net/npm/bootstrap@5.2.2/dist/css/bootstrap.min.css"
+            rel="stylesheet"
+            integrity="sha384-Zenh87qX5JnK2Jl0vWa8Ck2rdkQ2Bzep5IDxbcnCeuOxjzrPF/et3URy9Bv1WTRi"
+            crossorigin="anonymous"
+        />
+        <link
+                rel="stylesheet"
+                href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.9.1/font/bootstrap-icons.css"
+        />
+        <link rel="stylesheet" href="../../navbar/nav_styles.css" />
+        <link rel="stylesheet" href="../../main.css" />
+        <link rel="stylesheet" href="../rides/rides_list/toggle_button.css" />
+
+        <link rel="stylesheet" href="../rides/rides_list/card.css" />
+        <style>
+        tbody > tr:hover{
+            background-color: rgb(216, 199, 163, 0.3);
+        }
+        .nav-link::selection{
+            color:  #e3f1ef;
+        }
+        .nav-link{
+            color: #4e7570;
+        }
+
+        .nav-tabs > li.active > a:focus, .nav-tabs > li.active > a
+        {
+            margin-top: 1px;
+        }
+        .nav-tabs > li {
+            margin-bottom: 0px;
+        }
+        .nav-tabs > li.active {
+            margin-bottom: -1px;
+            background-color: #b3dad6;
+        }
+
+        .nav-tabs .nav-item .nav-link.active { 
+            background-color: #b3dad6; 
+            
+        }
+
+        .nav-link { 
+            color: #b3dad6; 
+
+        } 
+
+        .nav-link:hover { 
+            color: #FFF; 
+
+        } 
+
+        div.sticky {
+            position: -webkit-sticky;
+            position: sticky;
+            top: 0;
+        }
+
+        .btn {
+            margin-top: 10px;
+        }
+
+        .btn-find { 
+            background-color: #bfacd3;
+            color: #FFF;
+        }
+
+        .btn-find:hover { 
+            color: #451f6a;
+            background-color: #bfacd3;
+        }
+
+        .btn-offer { 
+            color: #fff;
+            background-color: #d8c7a3;
+        }
+
+        .btn-offer:hover { 
+            color: #8a6f42;
+            background-color: #d8c7a3;
+        }
+
+        div {
+            margin-left: 6px;
+            /* margin-top: 15px; */
+        }
+
+        .riders-num > .tooltiptext {
+            visibility: hidden;
+            width: 100px;
+            text-align: center;
+            border-radius: 10px;
+            padding: 10px;
+
+            /* Position the tooltip */
+            position: absolute;
+            top: 35px;
+            left: calc((100% - 100px)/2);
+            z-index: 2;
+        }
+
+        .riders-num:hover > .tooltiptext {
+            visibility: visible;
+        }
+
+        .riders-num {
+            position: relative;
+        }
+
+        .location-details > .tooltiptext {
+            visibility: hidden;
+            width: 200px;
+            text-align: center;
+            border-radius: 10px;
+            padding: 10px;
+
+            /* Position the tooltip */
+            position: absolute;
+            top: 35px;
+            left: calc((100% - 200px)/2);
+            z-index: 2;
+        }
+
+        .location-details:hover > .tooltiptext {
+            visibility: visible;
+        }
+
+        .location-details {
+            position: relative;
+        }
+
+        .table thead {
+            background-color: #d8c7a3;
+            color: #8A6F42;
+        }
+
+        .table tbody td {
+            border-bottom-width: 2px;
+            border-color: #d8c7a3;
+            color: #8A6F42;
+        }
+
+        .table tbody { 
+            background-color: #FFF;
+        }
+
+        .table { 
+            margin: 0px !important;
+        }
+
+        .no-drive, .no-ride {
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            margin-bottom: 20px;
+            padding-top: 20px;
+            padding-bottom: 20px;
+            border-radius: 20px;
+            
+        }
+
+        .no-drive, .no-ride {
+            /* background-color: rgba(216,199,163,0.5); */
+            background-color: #fff;
+            /* opacity: 0.5; */
+        }
+
+        .no-drive h5 {
+            color:#d8c7a3;
+        }
+        .no-ride h5 {
+            color:#bfacd3;
+        }
+
+
+        .no-drive img, .no-ride img {
+            width: 100px;
+        }
+
+        </style>
+
+        <title>Offers</title>
+    </head>
+    <body>
+        <div id="navbarVue">
+            <div
+                data-page="offers"
+            ></div>
+        </div>
+
+        <div id="populate_listings" class="mx-auto" style="margin-top: 15px;">
+
+            <div id="top_row" class="my-3 sticky" style="text-align: center; background-color: #e3f1ef;margin-top:15px">
+                        <h1 class="">Offers</h1>
+            </div>
+
+            <ul class="nav nav-tabs col-11 col-md-10 mx-auto " id="myTab" role="tablist">
+                <li class="nav-item" role="presentation">
+                    <button class="nav-link active" id="home-tab" data-bs-toggle="tab" data-bs-target="#home-tab-pane" type="button" role="tab" aria-controls="home-tab-pane" aria-selected="true">Upcoming</button>
+                </li>
+                <li class="nav-item text-center" role="presentation">
+                    <button class="nav-link" id="profile-tab" data-bs-toggle="tab" data-bs-target="#profile-tab-pane" type="button" role="tab" aria-controls="profile-tab-pane" aria-selected="false" style="text-align: center;">Past</button>
+                </li>
+            </ul>
+            <div class="tab-content col-11 col-md-10 mx-auto" id="myTabContent" style="margin-top: 15px;">
+                <div class="tab-pane fade show active mx-auto" id="home-tab-pane" role="tabpanel" aria-labelledby="home-tab" tabindex="0" style="margin-top: 15px;">
+                    <div v-if="current_drives.length>0" style="margin-top: 15px">
+                        <drive :list="current_drives" :past_present="present"></drive>
+                    </div>
+                    <div v-else-if="current_drives.length==0" class="mx-auto" style="margin-top: 15px;">
+                        <h4>My upcoming drives</h4>
+                        <div class="no-drive mx-auto" style="margin-top: 15px;">
+                            <img src="steering-wheel.png">
+                            <h5>No scheduled drives </h5>
+                            <button class="btn btn-offer" onclick="location.href='../rides/create_ride/rides_indiv_driver.html'" style="margin-top: 10px;"> 
+                                Offer a ride
+                            </button>
+                        </div>
+                        
+                    </div>
+                    <div v-if="current_rides.length>0" style="margin-top: 15px;">
+                        <ride :list="current_rides" :users="users" :past_present="present"></ride>
+                    </div>
+                    <div v-else-if="current_rides.length==0" class="mx-auto" style="margin-top: 15px;">
+                        <h4>My upcoming rides</h4>
+                        <div class="no-ride mx-auto" style="margin-top: 15px;">
+                            <img src="horse-car.png">
+                            <h5>No scheduled rides</h5>
+                            <button class="btn btn-find" onclick="location.href='../rides/rides_list/rides_listing.html'" style="margin-top: 10px;"> 
+                                Find a ride
+                            </button>
+                        </div>
+
+                    </div>
+
+                </div>
+                <div class="tab-pane fade mx-auto" id="profile-tab-pane" role="tabpanel" aria-labelledby="profile-tab" tabindex="0" style="margin-top: 15px;">
+                    <div v-if="expired_drives.length>0" style="margin-top: 15px; margin-left: 0">
+                        <drive :list="expired_drives" :past_present="expired"></drive>
+                    </div>
+                    <div v-else style="margin-top: 15px" class="mx-auto">
+                        <h4>My past drives</h4>
+                        <div class="no-drive mx-auto" class="mx-auto" style="margin-top: 15px;">
+                            <img src="steering-wheel.png">
+                            <h5>No driving history </h5>
+                            <button class="btn btn-offer" onclick="location.href='../rides/create_ride/rides_indiv_driver.html'" style="margin-top: 10px;"> 
+                                Offer a ride
+                            </button>
+                        </div>
+                    </div>
+                    <div v-if="expired_rides.length>0" class="mx-auto" style="margin-top: 15px;">
+                        <ride :list="expired_rides" :users="users", :past_present="expired"></ride>
+                    </div>
+                    <div v-else class="mx-auto" style="margin-top: 15px;">
+                        <h4>My past rides</h4>
+                        <div class="no-ride mx-auto" style="margin-top: 15px;">
+                            <img src="horse-car.png">
+                            <h5>No riding history</h5>
+                            <button class="btn btn-find" onclick="location.href='../rides/rides_list/rides_listing.html'" style="margin-top: 10px;"> 
+                                Find a ride
+                            </button>
+                        </div>
+                    </div>
+                </div>
+
+
+
+            </div>
+        </div>
+
+        <script src="https://unpkg.com/vue@3/dist/vue.global.js"></script>
+        <script
+            src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.2/dist/js/bootstrap.bundle.min.js"
+            integrity="sha384-OERcA2EqjJCMA+/3y+gxIOqMEjwtxJY7qPCqsdltbNJuaOe923+mo//f6V8Qbsw3"
+            crossorigin="anonymous"
+        ></script>
+        <script src="offers.js" type="module"></script>
+        <script src="../../navbar/navbar.js" type="module"></script>
+    </body>
+
+<!-- <script>
+    const user_name = "BobTan123"
+    localStorage.user= user_name
+</script> -->
+
+</html>

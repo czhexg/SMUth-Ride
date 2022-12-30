@@ -1,0 +1,411 @@
+<!DOCTYPE html>
+<head>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link
+    rel="icon"
+    type="image/x-icon"
+    href="../../../favicon_io/favicon.ico"
+/>
+    <link
+        href="https://cdn.jsdelivr.net/npm/bootstrap@5.2.2/dist/css/bootstrap.min.css"
+        rel="stylesheet"
+        integrity="sha384-Zenh87qX5JnK2Jl0vWa8Ck2rdkQ2Bzep5IDxbcnCeuOxjzrPF/et3URy9Bv1WTRi"
+        crossorigin="anonymous"
+    />
+    <style>
+        .user {
+            width: 500px;
+        }
+
+        .user-pic {
+            width: 70px;
+            border-radius: 50%;
+        }
+
+        .userinfo {
+            font-weight: bold;
+        }
+
+
+        .username {
+            font-weight: 300;
+            margin-top: auto;
+            margin-bottom: auto;
+        }
+
+        .name { 
+            margin-top: auto;
+            margin-bottom: auto;
+        }
+
+        .degree {
+            font-weight: 300;
+        }
+
+        .block-placeholder {
+            background-color: #4e7570;
+            width: 90%;
+            height: 90%;
+            margin: auto;
+        }
+
+        .user-buttons,
+        .user {
+            width: fit-content;
+            height: fit-content;
+            margin: auto;
+        }
+
+        .details {
+            text-align: left;
+        }
+
+        #map{
+            height: 100%;
+            width: 100%;
+            margin-left: 10% !important;
+        }
+
+        @media (max-width: 768px) {
+            #map{
+                height: 100%;
+                width: 100%;
+                margin-left: 0 !important;
+            }
+            #map-div { 
+                height: 400px;
+                margin-bottom: 3rem !important;
+            }
+            .accepted-div { 
+                margin-bottom: 100px;
+            }
+        }
+
+        .profileinfo { 
+            text-decoration: none;
+        }
+
+        .usertext:hover h2, .usertext:hover h4, .usertext:hover h6 {
+            color: #d8c7a3;
+            transition: all 0.2s ease-in-out;
+        }
+
+        .chat-button { 
+            background-color: #BFACD3;
+            color: #451F6A;
+            font-weight: 600;
+            /* margin-bottom: 70px; */
+        }
+
+        .chat-button:hover { 
+            background-color: #BFACD3;
+            color: #FFF;
+            font-weight: 600;
+        }
+
+        .chat-button:disabled { 
+            background-color: #BDBDBD;
+            color: #888888;
+            font-weight: 600;
+            /* margin-bottom: 70px; */
+        }
+
+        .my-offer-button { 
+            color: #8A6F42;
+            background-color: #d8c7a3;
+            font-weight: 600;
+            /* margin-bottom: 70px; */
+        }
+
+        .my-offer-button:hover { 
+            color: #FFF;
+            background-color: #d8c7a3;
+            font-weight: 600;
+        }
+
+        .valid-message { 
+            color: #BFACD3;
+            margin-bottom: 0px;
+        }
+
+        .btn-remove { 
+            background-color: #BFACD3 !important;
+            color: #451F6A !important;
+        }
+
+        .btn-remove:hover { 
+            background-color: #BFACD3 !important;
+            color: #FFF !important;
+        }
+
+        .table {
+            color: #4e7570;
+            /* background-color: #bedad6; */
+            border-radius: 5px;
+            overflow: hidden;
+        }
+
+        .table tbody td {
+            border-bottom-width: 3px;
+            border-color: #bedad6;
+        }
+
+        .trashcan{
+            cursor: pointer;
+        }
+    </style>
+
+    <link rel="stylesheet" href="../../../main.css" />
+    <link rel="stylesheet" href="../../../navbar/nav_styles.css" />
+</head>
+<script type="module" src="./rides_indiv_rider.js"></script>
+<body>
+    <div id="navbarVue">
+        <div data-page="rides"></div>
+    </div>
+<div id="main">
+    <div class="trip text-center my-5">
+        <h1 class="d-inline" v-if="to_from == 'from'">{{ smu_location }}</h1>
+        <h1 class="d-inline" v-else>{{ neighbourhood }}</h1>
+        <svg
+            xmlns="http://www.w3.org/2000/svg"
+            width="30"
+            height="30"
+            fill="#4e7570"
+            class="bi bi-arrow-right align-text-bottom mx-2"
+            viewBox="0 0 16 16"
+        >
+            <path
+                fill-rule="evenodd"
+                d="M1 8a.5.5 0 0 1 .5-.5h11.793l-3.147-3.146a.5.5 0 0 1 .708-.708l4 4a.5.5 0 0 1 0 .708l-4 4a.5.5 0 0 1-.708-.708L13.293 8.5H1.5A.5.5 0 0 1 1 8z"
+            />
+        </svg>
+        <h1 class="d-inline" v-if="to_from == 'to'">{{ neighbourhood }}</h1>
+        <h1 class="d-inline" v-else>{{ smu_location }}</h1>
+    </div>
+    <div class="container-fluid">
+        <div class="row">
+            <div class="col-md-6 d-flex" id="map-div">
+                <!-- <p>test</p> -->
+                <!-- <div class="block-placeholder"></div> -->
+                <div id="map" class="mx-auto m-2 rounded-3"></div>
+                        <script
+                            src="https://maps.googleapis.com/maps/api/js?key=API_KEY_HERE&callback=initMap"
+                            type="text/javascript" async defer></script>
+                        <script src="https://unpkg.com/axios/dist/axios.min.js"></script>
+                        <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.8.3/jquery.min.js"></script>
+
+                        <script>
+                            // var map;
+                            // var chosenloc = "sengkang";
+                            // var prof_loc = encodeURI(chosenloc);
+
+                            // var url =
+                            // "https://maps.googleapis.com/maps/api/geocode/json?address=" +
+                            // prof_loc +
+                            // "&key=API_KEY_HERE";
+
+                            // axios.get(url)
+                            // .then(response => {
+                            //     results = response.data.results[0]
+                            //     lat = results.geometry.location.lat
+                            //     lng = results.geometry.location.lng
+                            //     coords = [lat, lng]
+                            //     initMap()
+                            // })
+                            
+                            // function initMap() {
+                            //     map = new google.maps.Map(
+                            //         document.getElementById("map"),
+                            //         {
+                            //             center: { lat: coords[0], lng: coords[1] },
+                            //             zoom: 17,
+                            //             mapTypeControl: false,
+                            //             //mapTypeID: google.maps.mapTypeID
+                            //         }
+                            //     );
+                            //     marker = new google.maps.Marker({
+                            //         map,
+                            //         draggable: true,
+                            //         animation: google.maps.Animation.DROP,
+                            //         position: { lat: coords[0], lng: coords[1]},
+                            //         preserveViewport: true,
+                            //     });
+                            // }
+                            
+                        </script>
+                <!-- <div class="map d-inline-block align-middle mx-5">
+                </div> -->
+            </div>
+            <div class="col-md-6 text-center">
+                <div class="user d-flex pt-3">
+                    <a v-bind:href="'../../profile/profile.html?user=' + driver_username" class="profileinfo align-self-center">
+                    <!-- need to customise photo? -->
+                    <div class="profilepic d-inline me-2">
+                        <img
+                    id="profile-picture"
+                    class="profile-pic img-fluid rounded-circle rounded-circle-dp border border-dark"
+                    style="object-fit:cover; object-position: 50% 50%;width: 60px; height: 60px;"
+                    :src="picture_url"
+                    alt="profile picture"
+                />
+                    </div>
+                    <div class="usertext d-block my-auto">
+                        <div class="userinfo d-flex my-auto">
+                            <h4 class="name me-2" id="displayname">
+                                {{ driver_name }}
+                            </h4>
+                            <span v-if=" gender === 'Male' " class="align-self-center">
+                                <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="currentColor" class="bi bi-gender-male" viewBox="0 0 16 16">
+                                    <path fill-rule="evenodd" d="M9.5 2a.5.5 0 0 1 0-1h5a.5.5 0 0 1 .5.5v5a.5.5 0 0 1-1 0V2.707L9.871 6.836a5 5 0 1 1-.707-.707L13.293 2H9.5zM6 6a4 4 0 1 0 0 8 4 4 0 0 0 0-8z" stroke="#4e7570" stroke-width="1"/>
+                                </svg>
+                            </span>
+                            <span v-if=" gender === 'Female' " class="align-self-center">
+                                <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="currentColor" class="bi bi-gender-female" viewBox="0 0 16 16">
+                                    <path fill-rule="evenodd" d="M8 1a4 4 0 1 0 0 8 4 4 0 0 0 0-8zM3 5a5 5 0 1 1 5.5 4.975V12h2a.5.5 0 0 1 0 1h-2v2.5a.5.5 0 0 1-1 0V13h-2a.5.5 0 0 1 0-1h2V9.975A5 5 0 0 1 3 5z" stroke="#4e7570" stroke-width="1"/>
+                                </svg>
+                            </span>
+                        </div>
+                        <div class="username text-start">
+                            <h6 class="username" id="username">@{{ driver_username }}</h6>
+                        </div>
+                        <div class="degree text-start">
+                            <h6 class="degree" id="year_degree" v-if="degree.length > 0">
+                                {{year}}, {{degree}}
+                            </h6>
+                        </div>
+                    </a>
+                    </div>
+                </div>
+                <div class="ride my-5 d-inline-block">
+                    <div class="address mb-4">
+                        <svg
+                            xmlns="http://www.w3.org/2000/svg"
+                            width="30"
+                            height="30"
+                            fill="#4e7570"
+                            class="bi bi-geo-alt align-text-bottom me-2"
+                            viewBox="0 0 16 16"
+                        >
+                            <path
+                                d="M12.166 8.94c-.524 1.062-1.234 2.12-1.96 3.07A31.493 31.493 0 0 1 8 14.58a31.481 31.481 0 0 1-2.206-2.57c-.726-.95-1.436-2.008-1.96-3.07C3.304 7.867 3 6.862 3 6a5 5 0 0 1 10 0c0 .862-.305 1.867-.834 2.94zM8 16s6-5.686 6-10A6 6 0 0 0 2 6c0 4.314 6 10 6 10z"
+                            />
+                            <path
+                                d="M8 8a2 2 0 1 1 0-4 2 2 0 0 1 0 4zm0 1a3 3 0 1 0 0-6 3 3 0 0 0 0 6z"
+                            />
+                        </svg>
+                        <h4 class="d-inline" id="user_address">
+                            {{ address }}
+                        </h4>
+                    </div>
+                    <div class="cost mb-4">
+                        <svg
+                            xmlns="http://www.w3.org/2000/svg"
+                            width="30"
+                            height="30"
+                            fill="#4e7570"
+                            class="bi bi-coin align-text-bottom me-2"
+                            viewBox="0 0 16 16"
+                        >
+                            <path
+                                d="M5.5 9.511c.076.954.83 1.697 2.182 1.785V12h.6v-.709c1.4-.098 2.218-.846 2.218-1.932 0-.987-.626-1.496-1.745-1.76l-.473-.112V5.57c.6.068.982.396 1.074.85h1.052c-.076-.919-.864-1.638-2.126-1.716V4h-.6v.719c-1.195.117-2.01.836-2.01 1.853 0 .9.606 1.472 1.613 1.707l.397.098v2.034c-.615-.093-1.022-.43-1.114-.9H5.5zm2.177-2.166c-.59-.137-.91-.416-.91-.836 0-.47.345-.822.915-.925v1.76h-.005zm.692 1.193c.717.166 1.048.435 1.048.91 0 .542-.412.914-1.135.982V8.518l.087.02z"
+                            />
+                            <path
+                                d="M8 15A7 7 0 1 1 8 1a7 7 0 0 1 0 14zm0 1A8 8 0 1 0 8 0a8 8 0 0 0 0 16z"
+                            />
+                            <path
+                                d="M8 13.5a5.5 5.5 0 1 1 0-11 5.5 5.5 0 0 1 0 11zm0 .5A6 6 0 1 0 8 2a6 6 0 0 0 0 12z"
+                            />
+                        </svg>
+                        <h4 class="d-inline" id="costperpax">${{ cost_per_pax }} per pax</h4>
+                    </div>
+                    <div class="capacity mb-4">
+                        <svg
+                            xmlns="http://www.w3.org/2000/svg"
+                            width="30"
+                            height="30"
+                            fill="#4e7570"
+                            class="bi bi-car-front align-text-bottom me-2"
+                            viewBox="0 0 16 16"
+                        >
+                            <path
+                                d="M4 9a1 1 0 1 1-2 0 1 1 0 0 1 2 0Zm10 0a1 1 0 1 1-2 0 1 1 0 0 1 2 0ZM6 8a1 1 0 0 0 0 2h4a1 1 0 1 0 0-2H6ZM4.862 4.276 3.906 6.19a.51.51 0 0 0 .497.731c.91-.073 2.35-.17 3.597-.17 1.247 0 2.688.097 3.597.17a.51.51 0 0 0 .497-.731l-.956-1.913A.5.5 0 0 0 10.691 4H5.309a.5.5 0 0 0-.447.276Z"
+                            />
+                            <path
+                                fill-rule="evenodd"
+                                d="M2.52 3.515A2.5 2.5 0 0 1 4.82 2h6.362c1 0 1.904.596 2.298 1.515l.792 1.848c.075.175.21.319.38.404.5.25.855.715.965 1.262l.335 1.679c.033.161.049.325.049.49v.413c0 .814-.39 1.543-1 1.997V13.5a.5.5 0 0 1-.5.5h-2a.5.5 0 0 1-.5-.5v-1.338c-1.292.048-2.745.088-4 .088s-2.708-.04-4-.088V13.5a.5.5 0 0 1-.5.5h-2a.5.5 0 0 1-.5-.5v-1.892c-.61-.454-1-1.183-1-1.997v-.413a2.5 2.5 0 0 1 .049-.49l.335-1.68c.11-.546.465-1.012.964-1.261a.807.807 0 0 0 .381-.404l.792-1.848ZM4.82 3a1.5 1.5 0 0 0-1.379.91l-.792 1.847a1.8 1.8 0 0 1-.853.904.807.807 0 0 0-.43.564L1.03 8.904a1.5 1.5 0 0 0-.03.294v.413c0 .796.62 1.448 1.408 1.484 1.555.07 3.786.155 5.592.155 1.806 0 4.037-.084 5.592-.155A1.479 1.479 0 0 0 15 9.611v-.413c0-.099-.01-.197-.03-.294l-.335-1.68a.807.807 0 0 0-.43-.563 1.807 1.807 0 0 1-.853-.904l-.792-1.848A1.5 1.5 0 0 0 11.18 3H4.82Z"
+                            />
+                        </svg>
+                        <h4 class="d-inline" id="capacity">
+                            {{ max_capacity - current_riders.length + 1 }} / {{ max_capacity }} seats available
+                        </h4>
+                    </div>
+                    <div class="datetime mb-4">
+                        <svg
+                            xmlns="http://www.w3.org/2000/svg"
+                            width="30"
+                            height="30"
+                            fill="#4e7570"
+                            class="bi bi-clock align-text-bottom me-2"
+                            viewBox="0 0 16 16"
+                        >
+                            <path
+                                d="M8 3.5a.5.5 0 0 0-1 0V9a.5.5 0 0 0 .252.434l3.5 2a.5.5 0 0 0 .496-.868L8 8.71V3.5z"
+                            />
+                            <path
+                                d="M8 16A8 8 0 1 0 8 0a8 8 0 0 0 0 16zm7-8A7 7 0 1 1 1 8a7 7 0 0 1 14 0z"
+                            />
+                        </svg>
+                        <h4 class="d-inline" id="date_time">
+                            {{ date[1]}} ({{date[0]}})
+                            {{ time }}
+                           
+                        </h4>
+                    </div>
+                    <riders-table
+                        :driver="driver_username" 
+                        :user="user" 
+                        :rideid = "rideid"
+                    ></riders-table>
+                </div>
+                <div class="user-buttons">
+                    <!-- <button type="button" class="btn button btn-lg me-2">
+                        Make an offer
+                    </button> -->
+                        <!-- <button type="submit" class="btn button btn-lg" v-on:click="gotochat">
+                            Chat for more
+                        </button> -->
+                        <send-button 
+                            :driver="driver_username" 
+                            :user="user" 
+                            v-on:gotochat="gotochat" 
+                            :msg_length="msg_length" 
+                            :avail_capacity="max_capacity - current_riders.length + 1"
+                            :date="unformatted_date"
+                            :time="unformatted_time"
+                            :current_riders="current_riders"
+                            :rideid = "rideid"
+                        ></send-button>
+                </div>
+                <!-- <div class="details d-inline-block align-middle">
+                </div> -->
+            </div>
+        </div>
+    </div>
+</div>
+    <script
+        src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.2/dist/js/bootstrap.bundle.min.js"
+        integrity="sha384-OERcA2EqjJCMA+/3y+gxIOqMEjwtxJY7qPCqsdltbNJuaOe923+mo//f6V8Qbsw3"
+        crossorigin="anonymous"
+    ></script>
+    <script src="https://unpkg.com/vue@3/dist/vue.global.js"></script>
+    <script type="module" src="../../../navbar/navbar.js"></script>
+    <script>
+        // used to prevent the page from refreshing after submit, because its quite annoying lol
+        var form = document.getElementById("gotochat");
+        function handleForm(event) {
+            event.preventDefault();
+        }
+        form.addEventListener('submit', handleForm);
+    </script>
+</body>

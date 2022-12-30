@@ -1,0 +1,445 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    
+    <link
+    rel="icon"
+    type="image/x-icon"
+    href="../../favicon_io/favicon.ico"
+/>
+    
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC" crossorigin="anonymous">
+    <link rel="stylesheet" href="chat.css">
+    <link
+            href="https://cdn.jsdelivr.net/npm/bootstrap@5.2.2/dist/css/bootstrap.min.css"
+            rel="stylesheet"
+            integrity="sha384-Zenh87qX5JnK2Jl0vWa8Ck2rdkQ2Bzep5IDxbcnCeuOxjzrPF/et3URy9Bv1WTRi"
+            crossorigin="anonymous"
+        />
+    <link rel="stylesheet" href="../../navbar/nav_styles.css" />
+    <link rel="stylesheet" href="chat.css">
+    <!-- icon library -->
+    <script src="https://kit.fontawesome.com/943156cb0b.js" crossorigin="anonymous"></script>
+    <script src="vanilla_firebase.js" type="module"></script>
+    
+    <title>Chat</title>
+    <style>
+      .selected{
+        color: #8A6F42;
+        background-color: #d8c7a3;
+        padding:10px; 
+        display: flex;
+      }
+
+      /* .last{
+        border-radius: 0px 0px 30px 30px;
+      } */
+
+      #text {
+        max-height: 450px;
+        margin-top: 40px;
+        padding-top: 35px;
+      }
+
+      #text h1 {
+        margin-bottom: 5px;
+        font-weight: bold;
+      }
+
+      #text p {
+        font-size: 24px;
+      }
+
+      .drivers, .rides, .price {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+      }
+
+      /* .price {
+        flex-direction: column;
+      } */
+
+      .drivers p, .rides p, .price p {
+        font-weight: 400;
+      }
+
+      .rides select {
+        margin-left: 5px;
+      }
+
+      #confirm_cancel {
+        margin-top: 0;
+      }
+
+      .btn.cancel, .btn.confirm {
+        font-size: 20px;
+        font-weight: 500;
+      }
+
+      #offer_price {
+        max-width: 250px;
+      }
+
+      .rides select, .drivers select {
+        background-color: transparent;
+        border-bottom: 3px solid #4e7570;
+      }
+
+      option {
+        max-width: 40px;
+      }
+
+      #leftbar {
+        min-height: 60vh;
+        max-height: 70vh;
+        overflow-y: hidden;
+      }
+
+      .chat-list {
+        min-height: 60vh;
+        max-height: 70vh;
+        overflow-y:scroll;
+        /* buff */
+      }
+
+      .chat-list::-webkit-scrollbar {
+        display: none;
+      }
+
+      #chat::-webkit-scrollbar {
+        display: none;
+      }
+
+
+    </style>
+</head>
+<body>
+    <!-- navbar -->
+    <div id="navbarVue">
+      <div
+          data-page="chat"
+      ></div>
+    </div>
+
+    
+      <!-- chatpage -->
+      <div class="container text-center my-3 p-1" id="top_header">
+        <header>
+            <h1>SMUth Chat</h1>
+           
+        </header>
+      </div>
+      
+
+
+        <div class="container chat-container" id="chatroom">
+          
+            <!-- {{ messages }} -->
+            <!-- Offer Overlay -->
+            <div id="overlay" class="my-auto">
+              <div id="text" class="mb-6">
+                <!-- <img src="./6-2-taxi-cab-png-images.png" alt="" class="img-fluid"> -->
+                <h1 class="text-center mb-5 overlay">Make an offer</h1>
+                
+                <div class="drivers">
+                  <p class="overlay">
+                    Driver:
+                  </p>
+                  <!-- {{ selected_driver }} -->
+                  <select class="form-select mb-3 w-50" aria-label=".form-select example" v-model="selected_driver" v-on:change="get_relevant_rides">
+                    <option selected>{{ other_user }}</option>
+                    <option>{{ user }}</option>
+                    <!-- <option value="1">Use vue for this</option>
+                    <option value="2">Two</option>
+                    <option value="3">Three</option> -->
+                  </select>
+                </div>
+                <div class="rides">
+                  <p class="overlay">
+                    Rides:
+                  </p>
+                  <select class="form-select mb-3 w-50" aria-label=".form-select example" v-model="selected_ride" v-on:change="get_price" :disabled="relevant_rides.length > 0 ? disabled : ''" >
+                    <!-- v-bind:value="address[1]" -->
+                    <option v-if="relevant_rides.length > 0" v-for="address of relevant_rides" v-bind:value="address[1]">
+                      {{ address[0] }}
+                    </option>
+                    <!-- <option v-else selected>There are no available rides under this driver</option> -->
+                  </select>
+                </div>
+                <p v-show="0 >= relevant_rides.length" style="font-size:15px; color:red; margin-left: 35px; margin-top: -15px;"> There are no available rides under this driver </p>
+                <div class="price" v-show='relevant_rides.length > 0' >
+                  <p class="overlay">
+                    You are offering:
+                  </p>
+                  <span style="display: flex; justify-content: center; align-items: center; color: #4e7570; margin-top: -20px;">
+                    <p>S$</p>
+                    <input type="number" id = "offer_price" @change="setTwoNumberDecimal()" name='cost' min="0.00" step="0.01" class="text-input cost-input text-label overlay w-50" v-model="offer_price" oninput="validity.valid||(value='');" required>
+                  </span>
+                </div>
+                
+                
+                <span id="confirm_cancel">
+                  <button type="button" class="btn cancel" onclick="off()" style="margin-right: 20px;">Cancel</button>
+  
+                  <button type="button" class="btn confirm" onclick="off()" id="confirmOffer" v-on:click="send_offer" v-bind:disabled="selected_driver == '' || offer_price == '' || selected_ride == '' || selected_ride == 'All Rides are full!'">Confirm</button>
+                  
+                </span>
+              </div>
+            </div>
+            <!-- Offer Overlay END -->
+            
+            <!-- LEFT BAR -->
+            <!-- NEED TO BOOTSTRAP THIS THING -->
+            
+        <div class="container-fluid">
+          <div class="row">
+            <div class="col-md-5 col-xs-12 col-sm-12">
+
+              <!-- if has chat, will display the following -->
+              <div id="leftbar" v-show="swapping == true" class="d-none d-md-block" v-if="chat_array.length > 0">
+             
+                <div class=" chat-label-div">
+                  <h3 class="text-center d-block chat-label">Chats</h3>
+                  <hr>
+                </div>
+                <div class="chat-list">
+                  <chat-box 
+                  v-for="chat_id of chat_array" 
+                  :chat_id="chat_id.chat_id" 
+                  v-on:get_chat="retreive_chat" 
+                  :key="counter" 
+                  v-on:selected_chatroom="selected_chatroom" 
+                  v-bind:class="{selected : chat_id.chat_id == selected_room, last : chat_id.chat_id == last_room}" 
+                  @height_checker="height_checker"
+                  ></chat-box>
+                </div>
+               </div>
+
+              <!-- if no chats, will display the following -->
+              <div style="height:min-content; min-height: 70vh;" id="no_chat" class="hidden-md" v-else>
+                <div class="mt-1 chat-label-div">
+                  <h3 class="text-center d-block chat-label">Chats</h3>
+                  <hr>
+                </div>
+                <div id="empty_chat" class="d-block text-center mt-5 pt-5">
+                  <img class="mt-5" style="height: 128px; width: 128px; margin-left: 45px;" src="images/confusion.png">
+                  <h3 class="nochat">No chat yet!</h3>
+                </div>
+              </div>
+            </div>
+            
+            <!-- LEFT BAR END -->
+            <div class="col-md col-xs-12 col-sm-12">
+
+              <!-- if there are chats, this will display -->
+                <div id="chat"  style="min-height: 70vh; max-height: 80vh;" v-on:scroll="position = 'sticky'" v-if="chat_array.length > 0">
+                  <div id="contact" class="d-flex" v-if="other_user != ''">
+                    <div class="d-flex" style="min-height: 60px">
+                      <!-- back icon -->
+                      <!-- <button class="d-block d-md-none clearfix" @click="swap"> -->
+                        <svg id="back-button" xmlns="http://www.w3.org/2000/svg" width="30" height="30" fill="#FFF" class="bi bi-arrow-left d-md-none" viewBox="0 0 16 16" @click="swap">
+                          <path fill-rule="evenodd" d="M15 8a.5.5 0 0 0-.5-.5H2.707l3.147-3.146a.5.5 0 1 0-.708-.708l-4 4a.5.5 0 0 0 0 .708l4 4a.5.5 0 0 0 .708-.708L2.707 8.5H14.5A.5.5 0 0 0 15 8z"/>
+                        </svg>
+                        <!-- <i class="fa-solid fa-arrow-left fa-2xl d-block d-md-none" style="margin-top: 20px;" @click="swap"></i> -->
+                      <!-- </button> -->
+                      
+                      <a :href=" '../../pages/profile/profile.html?user=' + other_user " class="profile-url-design d-flex">
+                        <div id="photo" v-if="image_url != ''" style="min-height: 60px">
+                          <img :src="image_url" class="img-fluid rounded-circle"
+                          style="object-fit:cover;height: 50px; width: 50px; object-position: 50% 50%"> 
+                        </div>
+                        <h3 id="other-user" class="font-weight-bolder">{{ other_user }}</h3>
+                      </div>
+                      </a>
+                    <div>
+                      <button
+                      type="button"
+                      class="btn btn-light"
+                      onclick="overlay()"
+                      id="make-offer-button"
+                      >
+                      Make Offer
+                      </button>
+                    </div>
+                  </div>
+
+                  <!-- messages will display here -->
+                  <ul id="messages" style="margin-bottom: 20px;">
+                      <li v-for="message of messages" :class="{sent: user == message.username, receive: user != message.username}">
+                        <p v-if="message.type != 'offer'" v-html="message_formatted(message)" style="max-width: 200px;overflow-wrap:break-word;"></p>
+                        <p v-else-if="message.type == 'offer' && user!= message.username">
+                          <offer-button :message="message" :selected_ride="message.selected_ride" :user="message.username" :you="user" :other_user="other_user" :message_status="message.accepted" v-on:accept="accept" v-on:decline="decline"></offer-button>
+                        </p>
+                        <p v-else-if="message.type == 'offer' && user== message.username">
+                          <status-check :message="message"></status-check>
+                        </p>
+                      </li>
+
+                    
+                  </ul>
+                  <div style="height: 40px;"></div>
+
+                  <!-- <div style="background-color:azure; width: fit-content;border-radius: 30px; float: right; padding: 20px;" v-if="is_offer" class="sent" v-html="offer_template"></div> -->
+
+                  <!-- form to send message -->
+                  <div class="sub_div d-flex" style="bottom:0px" :style="{'position':position}">
+                      <!-- <form action="" id="message-form"> -->
+                          <input
+                              id="message-input"
+                              type="text"
+                              placeholder="Type Message..."
+                              v-model="message_to_send"
+                              @keyup.enter="send_message"
+                              autocomplete="off"
+                          />
+
+                          <button
+                              type="submit"
+                              id="message-btn"
+                              class="btn btn-success"
+                              onclick="test()"
+                              
+                              v-on:click="send_message"
+                          ></button>
+                          <label for="message-btn" id="send-label">
+                            <svg xmlns="http://www.w3.org/2000/svg" id="send-button" width="25" height="25" fill="#FFFFFF" class="bi bi-send" viewBox="0 0 16 16">
+                              <path d="M15.854.146a.5.5 0 0 1 .11.54l-5.819 14.547a.75.75 0 0 1-1.329.124l-3.178-4.995L.643 7.184a.75.75 0 0 1 .124-1.33L15.314.037a.5.5 0 0 1 .54.11ZM6.636 10.07l2.761 4.338L14.13 2.576 6.636 10.07Zm6.787-8.201L1.591 6.602l4.339 2.76 7.494-7.493Z"/>
+                            </svg>
+                          </label>
+
+                          <!-- <button class="btn btn-outline-dark" id="message-btn" type="submit"><i class="fa-solid fa-taxi"></i></button> -->
+
+                          <!-- <button id="message-btn" type="submit" class="btn-primary"><i class="fa-solid fa-taxi"></i></button> -->
+                      <!-- </form> -->
+                      <!-- {{swapping}} -->
+                  </div>
+              </div>
+              
+                <!-- if not chat, this will display -->
+                <div style="height:min-content; min-height: 70vh;" id="no_convo" v-else>
+                  <div class="d-flex p-1 chat-label-div" style="background-color: #4e7570;">
+                    
+                    <h3 class="text-white mx-auto p-2 ps-3">Welcome to SMUth Chat</h3>
+                  </div>
+                  
+                  <div id="empty_chat" class="d-block text-center pt-5 mt-5">
+                    <img class="mt-5" src="images/cab.png" id="cabmissing">
+                    <h3 class="noconvo">Chat with a driver or rider</h3>
+                    <button class="btn button-ride" onclick="window.location.href='../rides/rides_list/rides_listing.html'">Request to join a ride!</h6>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+          </div>
+            
+        </div>
+        </div>
+
+
+        <!-- scripts -->
+        <script src="https://www.gstatic.com/firebasejs/8.2.1/firebase-app.js"></script>
+        <script src="https://www.gstatic.com/firebasejs/8.2.1/firebase-database.js"></script>
+        
+        <script>
+          // import { getDatabase, ref, set, onValue, update } from "https://www.gstatic.com/firebasejs/9.4.0/firebase-database.js"
+          // import { getDatabase, ref, set, onValue, update } from "https://www.gstatic.com/firebasejs/9.4.0/firebase-database.js";
+            
+          
+          
+          
+          
+          // function sticky() {
+          //     console.log("BAD")
+          //       document.getElementsByClassName("sub_div")[0].style.position =
+          //           "sticky";
+                    
+            // }
+          
+          // function change_style(){
+          //   console.log("RAN")
+          //   document.getElementsByClassName("sub_div")[0].style.position =
+          //           "absolute";
+          // }
+
+          function overlay() {
+                document.getElementById("overlay").style.display = "block";
+          }
+
+          function off() {
+                document.getElementById("overlay").style.display = "none";
+          }
+
+            // function scroll(){
+            // //   window.setInterval(function() {
+            // var elem = document.getElementById('chat');
+            // //   elem.scrollTop = elem.scrollHeight;
+            // // }, 0);
+            // window.scrollTo(0, document.querySelector(".chat").scrollHeight);
+
+            // }
+            // function test() {
+            //     var elem = document.getElementById("chat");
+            //     elem.scrollTop = elem.scrollHeight;
+            // }
+
+            
+            // window.setInterval(function() {
+            // var elem = document.getElementById('chat');
+            //   elem.scrollTop = elem.scrollHeight;
+            // }, 0);
+            
+
+            // function accept(e){
+            //   // const db = getDatabase()
+            //   // console.log("this user is"  + user)
+            //   console.log(e)
+            //   console.log("YES")
+              
+            //   console.log(e.id)
+
+            //   let id = e.id
+            //   let ride_id = id.split("_")[1]
+            //   let user = id.split("_")[2]
+            //   console.log(ride_id)
+
+
+              // set the datebase
+              // const db = getDatabase()
+              // const updates = {};
+              // updates[`rides/${ride_id}/users_offered`] = displayname
+              // return update(ref(db), updates)
+
+
+            // }
+
+          
+
+            // function decline(){
+            //   const db = getDatabase()
+            // }
+
+
+            
+        </script>
+            
+        
+        <script
+        src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.2/dist/js/bootstrap.bundle.min.js"
+        integrity="sha384-OERcA2EqjJCMA+/3y+gxIOqMEjwtxJY7qPCqsdltbNJuaOe923+mo//f6V8Qbsw3"
+        crossorigin="anonymous"
+    ></script>
+        <script src="https://unpkg.com/vue@3/dist/vue.global.js"></script>
+        <script type="module" src="../../navbar/navbar.js"></script>
+        <script type="module" src="../../index.js"></script>
+        <!-- <script type="module" src="./chat.js"></script> -->
+        <script src="vue.js" type="module"></script>
+        
+        
+        
+    </body>
+</html>

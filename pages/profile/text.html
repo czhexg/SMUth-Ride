@@ -1,0 +1,26 @@
+<!DOCTYPE html>
+<html>
+    <body>
+
+    </body>
+    <script>
+          window.fbAsyncInit = function() {
+                FB.init({
+                appId            : 'your-app-id',
+                autoLogAppEvents : true,
+                xfbml            : true,
+                version          : 'v15.0'
+                });
+            };
+        FB.api(
+            "PSH.bernice",
+            function (response) {
+            if (response && !response.error) {
+                console.log(response)
+            }
+            }
+        );
+    </script>
+    <script async defer crossorigin="anonymous" src="https://connect.facebook.net/en_US/sdk.js"></script>
+
+</html>

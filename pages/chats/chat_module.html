@@ -1,0 +1,32 @@
+<body> 
+    <script src='https://cdn.firebase.com/js/client/2.2.1/firebase.js'></script>
+    <form id="usertest">
+        user 1 ID<input type="text" name="user1">
+        <br>
+        user 2 ID<input type="text" name="user2">
+        <br>
+        <button type="submit">submit</button>
+    </form>
+
+    <script type="module" src="./chat_module.js"></script>
+    <!-- <script src="chat_module.js"></script> -->
+
+    <button id="g">Get data</button>
+
+    <div id="fill"></div>
+</body>
+<script>
+    
+    // used to prevent the page from refreshing after submit, because its quite annoying lol
+    var form = document.getElementById("usertest"); 
+    function handleForm(event) {     
+        event.preventDefault(); 
+    }  
+    form.addEventListener('submit', handleForm);
+
+    
+  
+</script>
+
+
+<!-- <script type="module" src="./chat_module.js"></script> -->

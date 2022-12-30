@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta http-equiv="X-UA-Compatible" content="ie=edge" />
+    <title>Firebase Image Upload in Javascript</title>
+  </head>
+  <body>
+    
+
+
+    <img id='test'>
+
+    <script type="module">
+      import { getDatabase, ref, set, onValue, update } from "https://www.gstatic.com/firebasejs/9.4.0/firebase-database.js";
+      import {
+    find_name_from_username,
+    find_user_profile,
+    write_user_profile,
+} from "../../index.js";
+     async function GetProfilePicUrl(){
+    let username = localStorage.getItem("username_x")
+    console.log(username)
+    const db = getDatabase();
+
+    const data = ref(db, 'users/' + username);
+    onValue(data, (snapshot) => {
+        console.log(snapshot)
+        console.log(snapshot.val().profile_url)
+        document.getElementById('test').setAttribute('src', snapshot.val().profile_url)
+    });
+
+    // get(child(db, `users/${username}`)).then((snapshot)=>{
+    //     if(snapshot.exists()){
+    //         console.log(snapshot.val().profile_url)
+    //         return snapshot.val().profile_url
+    //     }
+    // })
+}
+    GetProfilePicUrl()
+    </script>
+
+    <script>
+
+    </script>
+    
+  </body>

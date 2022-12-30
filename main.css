@@ -1,0 +1,29 @@
+body {
+  background-color: #e3f1ef !important;
+  margin-top: 130px !important;
+}
+
+* {
+  margin: 0;
+  padding: 0;
+}
+
+h1, h2, h3, h4, h5, h6, p {
+  color: #4e7570;
+}
+
+.card {
+  background-color: #bedad6;
+  margin: 1rem;
+}
+
+.button {
+  background-color: #4e7570 !important;
+  color: #e3f1ef !important;
+  font-weight: 600 !important;
+}
+
+a:link {
+  color: #bedad6;
+}
+/*# sourceMappingURL=main.css.map */

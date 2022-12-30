@@ -1,0 +1,307 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="UTF-8" />
+        <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+        <title>SMUth Ride</title>
+        <script src="https://unpkg.com/vue@3/dist/vue.global.js"></script>
+
+        <link
+            rel="icon"
+            type="image/x-icon"
+            href="../../favicon_io/favicon.ico"
+        />
+        <link
+            rel="stylesheet"
+            href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free@6.2.0/css/fontawesome.min.css"
+            integrity="sha384-z4tVnCr80ZcL0iufVdGQSUzNvJsKjEtqYZjiQrrYKlpGow+btDHDfQWkFjoaz/Zr"
+            crossorigin="anonymous"
+        />
+        <link rel="stylesheet" href="login.css" />
+    </head>
+    <body>
+        <div class="container">
+            <div class="forms-container">
+                <div class="signin-register">
+                    <form
+                        action="./pages/rides/rides_list/rides_listing.html"
+                        method="post"
+                        class="sign-in-form"
+                        id="login"
+                    >
+                        <h2 class="title">Login</h2>
+                        <div class="txt_field">
+                            <i class="fa fa-user" aria-hidden="true"></i>
+                            <input type="text" name="useroremail" required />
+                            <span></span>
+                            <label> Username </label>
+                        </div>
+                        <div class="txt_field">
+                            <i class="fa fa-lock" aria-hidden="true"></i>
+                            <input
+                                type="password"
+                                name="password"
+                                id="login-pwd-field"
+                                required
+                            />
+                            <i
+                                toggle="#login-pwd-field"
+                                class="fa fa-fw fa-eye login-toggle-password"
+                            ></i>
+                            <span></span>
+                            <label>Password</label>
+                        </div>
+                        <div class="alert text-danger" style="position: inherit" v-if="success ==false">
+                            Invalid Username or Password.
+                        </div>
+                        <input
+                            type="submit"
+                            value="Login"
+                            @click="login_user()"
+                        />
+                    </form>
+                    <form
+                        action="../rides/rides_list/rides_listing.html"
+                        method="post"
+                        class="register-form"
+                        id="registration"
+                    >
+                        <h2 class="title">Register</h2>
+                        <div class="test-register" id="style-1" style="position: relative">
+                            <div class="txt_field">
+                                <i class="fa fa-user" aria-hidden="true"></i>
+                                <input
+                                    type="text"
+                                    name="username"
+                                    v-model="username"
+                                    required
+                                />
+                                <span></span>
+                                <label> Username </label>
+                                <text class="alert text-danger" v-if="errorMessages.username.length>0"
+                                      v-for="msg of errorMessages.username">
+                                    {{msg}}
+                                </text>
+                            </div>
+                            <div class="txt_field">
+                                <i class="fa fa-user" aria-hidden="true"></i>
+                                <input type="text" name="name"  v-model="display_name" required/>
+                                <span></span>
+                                <label> Full Name </label>
+                                <text class="alert text-danger" v-if="errorMessages.display_name.length>0"
+                                      v-for="msg of errorMessages.display_name">
+                                    {{msg}}
+                                </text>
+                            </div>
+                            <div class="txt_field">
+                                <i
+                                    class="fa fa-envelope"
+                                    aria-hidden="true"
+                                ></i>
+                                <input type="text" name="email"  v-model="email" required/>
+                                <span></span>
+                                <label> Email </label>
+                                <text class="alert2 text-danger" v-if="errorMessages.email.length>0"
+                                      v-for="msg of errorMessages.email">
+                                    {{msg}}
+                                </text>
+                            </div>
+                            <div class="txt_field">
+                                <i class="fa fa-lock" aria-hidden="true"></i>
+                                <input
+                                    type="password"
+                                    name="pw"
+                                    id="pwd-field"
+                                    v-model="password"
+                                    required
+                                />
+                                <span></span>
+                                <label> Password </label>
+                                <text class="alert2 text-danger" v-if="errorMessages.password.length>0"
+                                      v-for="msg of errorMessages.password">
+                                    {{msg}}
+                                </text>
+                            </div>
+                            <div class="txt_field">
+                                <i class="fa fa-lock" aria-hidden="true"></i>
+                                <input
+                                    type="password"
+                                    name="cfmpassword"
+                                    id="cfm-pwd-field"
+                                    v-model="cfmpassword"
+                                    required
+                                />
+                                <span></span>
+                                <label> Confirm Password </label>
+                                <text class="alert2 text-danger" v-if="errorMessages.cfmpassword.length>0"
+                                      v-for="msg of errorMessages.cfmpassword">
+                                    {{msg}}
+                                </text>
+                            </div>
+                            <div class="txt_field">
+                                <i
+                                    class="fa fa-graduation-cap"
+                                    aria-hidden="true"
+                                ></i>
+                                <select name="degree" id="degree" v-model="degree" required >
+                                    <option
+                                        disabled
+                                        selected
+                                        value=""
+                                        style="display: none"
+                                    ></option>
+                                    <option value="Accountancy">Accountancy</option>
+                                    <option value="Business">Business</option>
+                                    <option value="Computer Science">Computer Science</option>
+                                    <option value="Information Systems">Information Systems</option>
+                                    <option value="Computing & Law">Computing & Law</option>
+                                    <option value="Software Engineering">Software Engineering</option>
+                                    <option value="Economics">Economics</option>
+                                    <option value="Law">Law</option>
+                                    <option value="Social Science">Social Science</option>
+                                    <option value="CIS">CIS</option>
+                                </select>
+                                <span></span>
+                                <label> Degree </label>
+                            </div>
+                            <div class="txt_field">
+                                <i class="fa fa-child" aria-hidden="true"></i>
+                                <select name="year" id="year" v-model="year" required>
+                                    <option
+                                        disabled
+                                        selected
+                                        value=""
+                                        style="display: none"
+                                    ></option>
+                                    <option value="Year 1">Year 1</option>
+                                    <option value="Year 2">Year 2</option>
+                                    <option value="Year 3">Year 3</option>
+                                    <option value="Year 4">Year 4</option>
+                                    <option value="Year 5">Year 5</option>
+                                    <option value="Alumni">Alumni</option>
+                                </select>
+                                <span></span>
+                                <label>Year</label>
+                            </div>
+                            <div class="txt_field">
+                                <i
+                                    class="fa fa-id-card-o"
+                                    aria-hidden="true"
+                                ></i>
+                                <input
+                                    type="number"
+                                    name="age"
+                                    oninput="validity.valid||(value='');"
+                                    v-model="age"
+                                    min = "0"
+                                    max = "99"
+                                    required
+                                />
+                                <span></span>
+                                <label> Age </label>
+                                <text class="alert2 text-danger" v-if="errorMessages.age.length>0"
+                                      v-for="msg of errorMessages.age">
+                                    {{msg}}
+                                </text>
+                            </div>
+                            <div class="txt_field">
+                                <i
+                                    class="fa fa-transgender"
+                                    aria-hidden="true"
+                                ></i>
+                                <select name="gender" id="gender" v-model="gender" required>
+                                    <option
+                                        disabled
+                                        selected
+                                        value=""
+                                        style="display: none"
+                                    ></option>
+                                    <option value="Male">Male</option>
+                                    <option value="Female">Female</option>
+                                </select>
+                                <span></span>
+                                <label> Gender </label>
+                            </div>
+
+                        </div>
+                        <div class="alert_container">
+                            <p class="alert text-danger" v-if="errorMessages.register.length>0">
+                                {{errorMessages.register[0]}}
+                            </p>
+                            <p  class="alert text-danger" v-if="errorCheck">
+                                Please resolve all errors
+                            </p>
+                        </div>
+
+                        <input
+                            type="submit"
+                            value="Register"
+                            @click="register_user()"
+                        />
+
+
+
+
+                    </form>
+                </div>
+                <div class="panels-container">
+                    <div class="panel left-panel">
+                        <div class="content">
+                            <h1 style="font-size: 3rem">SMUth Ride</h1>
+                            <h3>New here?</h3>
+                            <p>
+                                SMUth Ride is a carpooling platform that offers
+                                rides to and from SMU for everyone in SMU! Catch
+                                this opportunity to make friends around campus!
+                                <b>Have a smooth ride with SMUth Ride!</b>
+                            </p>
+                            <button class="btn transparent" id="register-btn">
+                                Register
+                            </button>
+                        </div>
+                        <div class="image">
+                            <img src="img/front_car.svg" alt="" />
+                        </div>
+                    </div>
+                    <div class="panel right-panel">
+                        <div class="content">
+                            <h3>One of us?</h3>
+                            <p>
+                                Welcome back SMUth Riders! Miss the fun and
+                                exciting rides to and from SMU? Login now and
+                                ride away!
+                            </p>
+                            <button class="btn transparent" id="sign-in-btn">
+                                Login
+                            </button>
+                        </div>
+                        <div class="image">
+                            <img src="img/front_car.svg" alt="" />
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <script
+            src="https://kit.fontawesome.com/64d58efce2.js"
+            crossorigin="anonymous"
+        ></script>
+        <script type="module" src="login.js"></script>
+        <script>
+            // // used to prevent the page from refreshing after submit, because its quite annoying lol
+            var form = document.getElementById("registration");
+            function handleForm(event) {
+                event.preventDefault();
+            }
+            form.addEventListener("submit", handleForm);
+
+            var form = document.getElementById("login");
+            function handleForm(event) {
+                event.preventDefault();
+            }
+            form.addEventListener("submit", handleForm);
+        </script>
+    </body>
+</html>

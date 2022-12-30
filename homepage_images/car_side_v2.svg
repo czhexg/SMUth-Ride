@@ -1,0 +1,29 @@
+<svg width="309" height="196" viewBox="0 0 309 196" fill="none" xmlns="http://www.w3.org/2000/svg">
+<path d="M4 122C4 97.1472 24.1472 77 49 77H239C277.66 77 309 108.34 309 147V159C309 164.523 304.523 169 299 169H34C17.4315 169 4 155.569 4 139V122Z" fill="#4E7570"/>
+<circle cx="70" cy="157" r="39" fill="#3F3F40"/>
+<circle cx="70" cy="157" r="31" fill="#BDC2BD"/>
+<rect x="68" y="135" width="4" height="13" fill="#3F3F40"/>
+<rect x="68" y="165" width="4" height="13" fill="#3F3F40"/>
+<rect x="90" y="155" width="4" height="13" transform="rotate(90 90 155)" fill="#3F3F40"/>
+<rect x="62" y="155" width="4" height="13" transform="rotate(90 62 155)" fill="#3F3F40"/>
+<circle cx="233" cy="157" r="39" fill="#3F3F40"/>
+<circle cx="233" cy="157" r="31" fill="#BDC2BD"/>
+<rect x="231" y="135" width="4" height="13" fill="#3F3F40"/>
+<rect x="231" y="165" width="4" height="13" fill="#3F3F40"/>
+<rect x="253" y="155" width="4" height="13" transform="rotate(90 253 155)" fill="#3F3F40"/>
+<rect x="225" y="155" width="4" height="13" transform="rotate(90 225 155)" fill="#3F3F40"/>
+<ellipse cx="284.405" cy="122.333" rx="16" ry="11" transform="rotate(60.8183 284.405 122.333)" fill="#D8C7A3"/>
+<path d="M170 9L247.076 93H92.9237L170 9Z" fill="#4E7570"/>
+<path d="M29 37C29 20.4315 42.4315 7 59 7H163C168.523 7 173 11.4772 173 17V92H29V37Z" fill="#4E7570"/>
+<ellipse rx="56.6372" ry="10.1234" transform="matrix(0.713136 0.701026 -0.576373 0.817187 205.821 47.9769)" fill="#4E7570"/>
+<ellipse rx="47.569" ry="9.54076" transform="matrix(0.184159 -0.982896 0.990122 0.140208 30.6106 62.28)" fill="#4E7570"/>
+<path d="M180 15.5C180 24.0604 150.103 31 111.285 31C72.4678 31 41 24.0604 41 15.5C41 6.93959 72.4678 0 111.285 0C150.103 0 180 6.93959 180 15.5Z" fill="#4E7570"/>
+<rect x="19.2471" y="72" width="17" height="28" transform="rotate(10.8011 19.2471 72)" fill="#4E7570"/>
+<rect width="16.4279" height="27.0385" transform="matrix(0.735346 -0.677692 0.728615 0.684923 223 77.2178)" fill="#4E7570"/>
+<path d="M170.5 21L206 82H135L170.5 21Z" fill="#BEDAD6"/>
+<path d="M45 50C45 33.4315 58.4315 20 75 20H159C164.523 20 169 24.4772 169 30V81H45V50Z" fill="#BEDAD6"/>
+<ellipse rx="41.5291" ry="7.38534" transform="matrix(0.576941 0.816786 -0.831367 0.555724 195.1 57.0246)" fill="#BEDAD6"/>
+<ellipse rx="34.3042" ry="8.57312" transform="matrix(0.10079 -0.994908 0.999575 0.0291622 49.9723 58.0094)" fill="#BEDAD6"/>
+<path d="M176 27C176 34.732 149.114 41 114.206 41C79.2984 41 51 34.732 51 27C51 19.268 79.2984 13 114.206 13C149.114 13 176 19.268 176 27Z" fill="#BEDAD6"/>
+<rect x="26" y="81" width="219" height="15" fill="#4E7570"/>
+</svg>

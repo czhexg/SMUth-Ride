@@ -1,0 +1,7 @@
+.nav-tabs > li > a
+{
+    /* adjust padding for height*/
+    padding-top: 4px;
+    padding-bottom: 4px;
+}
+

@@ -1,0 +1,127 @@
+<!DOCTYPE html>
+<html>
+  <style>
+      #front-car { 
+        position: absolute;
+        width: 411px;
+        height: 355px;
+        left: 95px;
+        top: 420px;
+        z-index: 2;
+        animation: MoveUpDown 1.5s linear infinite;
+      }
+
+      #road { 
+        position: absolute;
+        width: 737px;
+        height: 352px;
+        left: -42px;
+        top: 581px;
+      }
+
+      #road-stripes { 
+        position: absolute;
+        width: 100px;
+        height: 500px;
+        left: 250px;
+        top: 388px;
+        /* animation: MoveUpDown 1.5s linear infinite; */
+      }
+
+      #stripe1 { 
+        position: absolute;
+        width: 115px;
+        height: 30px;
+        left: 270px;
+        top: 904px;
+        background-color: #999999;
+        z-index: 1;
+        animation: stripe1up 1.5s linear infinite;
+      }
+
+      #stripe2 { 
+        position: absolute;
+        width: 115px;
+        height: 25px;
+        left: 270px;
+        top: 804px;
+        background-color: #999999;
+        z-index: 1;
+        animation: stripe2up 1.5s linear infinite;
+      }
+
+      #stripe3 { 
+        position: absolute;
+        width: 115px;
+        height: 20px;
+        left: 270px;
+        top: 724px;
+        background-color: #999999;
+        z-index: 1;
+        animation: stripe3up 1.5s linear infinite;
+      }
+
+      #blocker { 
+        position: absolute;
+        width: 115px;
+        height: 30px;
+        left: 270px;
+        top: 904px;
+        background-color: #FFFFFF;
+        z-index: 1;
+      }
+      
+      @keyframes MoveUpDown {
+        0%, 100% {
+          transform: translateY(0);
+        }
+        50% {
+          transform: translateY(-10px);
+        }
+      }
+
+      @keyframes stripe1up {
+        0% {
+          transform: translateY(0);
+          height: 30px;
+        }
+        100% {
+          transform: translateY(-100px);
+          height: 25px;
+        }
+      }
+
+      @keyframes stripe2up {
+        0% {
+          transform: translateY(0);
+          height: 25px;
+        }
+        100% {
+          transform: translateY(-80px);
+          height: 20px;
+        }
+      }
+
+      @keyframes stripe3up {
+        0% {
+          transform: translateY(0);
+          height: 20px;
+        }
+        100% {
+          transform: translateY(-60px);
+          height: 15px;
+        }
+      }
+
+  </style>
+  <body>
+      <div class="parent"> 
+        <img src="./front_car.svg" id="front-car">
+        <img src="./full_road.svg" id="road">
+        <div id="stripe1"></div>
+        <div id="stripe2"></div>
+        <div id="stripe3"></div>
+        <div id="blocker"></div>
+      </div>
+  </body>
+</html>

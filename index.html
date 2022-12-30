@@ -1,0 +1,118 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="UTF-8" />
+        <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+        <link
+    rel="icon"
+    type="image/x-icon"
+    href="./favicon_io/favicon.ico"
+/>
+        <title>Home</title>
+        <link
+            href="https://cdn.jsdelivr.net/npm/bootstrap@5.2.2/dist/css/bootstrap.min.css"
+            rel="stylesheet"
+            integrity="sha384-Zenh87qX5JnK2Jl0vWa8Ck2rdkQ2Bzep5IDxbcnCeuOxjzrPF/et3URy9Bv1WTRi"
+            crossorigin="anonymous"
+        />
+        <link
+        rel="stylesheet"
+        href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css"
+        />
+        <link rel="stylesheet" href="./home.css" />
+        <link rel="stylesheet" href="navbar/nav_styles.css" />
+        <link rel="stylesheet" href="./pages/rides/rides_list/toast.css">
+    <body>
+        <div id="navbarVue">
+            <div data-page="home"></div>
+        </div>
+        <div class="alert message" role="alert">
+            <h6 style="margin: 0">Logged In!</h6>
+        </div>
+        <div class="welcome">
+          <h1 class="hello-text">Hello,</h1>
+          <div class="text">
+            <p class="hello-text">SMUth Ride is</p>
+            <p>
+              <span class="word green">safe</span>
+              <span class="word darkgreen">affordable</span>
+              <span class="word orange">convenient</span>
+              <span class="word darkorange">about community</span>  
+              <span class="word red">for SMU</span>
+            </p>
+          </div>
+
+          <div id="app">
+            <button class="btn from-center" v-if="!loggedin" onclick="location.href='./pages/login/login.html'"> 
+              <h4>Start your journey</h4>
+            </button>
+            <button class="btn from-center" v-else onclick="location.href='./pages/rides/rides_list/rides_listing.html'"> 
+              <h4>Start your journey</h4>
+          </button>
+          </div>
+
+          <div class="skyline">
+          </div>
+
+          <!-- <div class="car-group">
+            <img src="./homepage_images/car_side_v2.svg" class="car">
+            <img src="./homepage_images/tyre.svg" class="tire" id="tire1">
+            <img src="./homepage_images/tyre.svg" class="tire" id="tire2">
+          </div> -->
+          
+          <div class="canvas">
+            <div class="cloud"></div>
+            <div class="cloud a"></div>
+            <div class="cloud b"></div>
+            <div class="cloud c"></div>
+            <div class="star"></div>
+            <div class="star a"></div>
+            <div class="star b"></div>
+            <div class="star c"></div>
+            <div class="star d"></div>
+            <div class="wind"></div>
+          <!-- <div class="swirly-wind">
+            <span></span>
+            <span></span>
+            <span></span>
+          </div>
+          <div class="swirly-wind a"></div>
+          <div class="swirly-wind b"></div> -->
+            <div class="eclipse">
+              <div class="sun"></div>
+              <div class="sun a"></div>
+              <div class="moon"></div>
+              <div class="moon a"></div>
+            </div>
+          </div>
+
+        </div>
+        <script
+        src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.2/dist/js/bootstrap.bundle.min.js"
+        integrity="sha384-OERcA2EqjJCMA+/3y+gxIOqMEjwtxJY7qPCqsdltbNJuaOe923+mo//f6V8Qbsw3"
+        crossorigin="anonymous"
+        ></script>
+        <script>
+            if  (localStorage.getItem("alert") == 'logged in') {
+                console.log("ride created")
+                document.getElementsByClassName("message")[0].style.display = "block";
+                document.getElementsByClassName("message")[0].classList.add("slide-in-top");
+                setTimeout(()=> {
+                    document.getElementsByClassName("message")[0].classList.remove("slide-in-top");
+                    document.getElementsByClassName("message")[0].classList.add("slide-out-top");
+                }, 3000);
+                setTimeout(()=> {
+                    document.getElementsByClassName("message")[0].style.display = "none";
+
+
+                    localStorage.removeItem("alert");
+                }, 4000);
+            }
+        </script>
+        <script src="https://unpkg.com/vue@3/dist/vue.global.js"></script>
+        <script src="./home.js"></script>
+        <script src="./home_vue.js"></script>
+        <script type="module" src="navbar/navbar.js"></script>
+    </body>
+</html>

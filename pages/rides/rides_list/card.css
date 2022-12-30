@@ -1,0 +1,90 @@
+
+.card {
+    background-color: #e3f1ef;;
+    border: none;
+    width: 330px;
+    margin: 20px auto;
+    min-width: 251px;
+    min-height: 235px;
+    max-width: 330px;
+    max-height: 300px;
+    transition: all 0.2s ease-in-out;
+}
+
+
+h2 { 
+    color: #BFACD3;
+}
+
+.card-body {
+    border-radius: 20px;
+    background-color: rgba(255,255,255,0.5);
+    color: #4e7570;
+}
+
+.card-body:hover {
+    border-radius: 20px;
+    background-color: rgba(255,255,255,0.8);
+    color: #4e7570;
+    transition: all 0.2s ease-in-out;
+}
+
+.rounded-circle-dp {
+    width: 60px;
+    border-color: #4e7570;
+}
+
+.badge {
+    background-color: #4c86a2;
+    position: absolute;
+    top: 10px;
+    left: 25px;
+}
+
+.toggle.toggle-group.toggle-handle{
+    width: 36px;
+    border-radius: 50%;
+}
+
+.neighbourhood > .tooltiptext {
+    visibility: hidden;
+    width: 200px;
+    text-align: center;
+    border-radius: 10px;
+    padding: 10px;
+
+    /* Position the tooltip */
+    position: absolute;
+    top: 40px;
+    left: calc((100% - 200px)/2);
+    z-index: 1;
+}
+
+.neighbourhood:hover > .tooltiptext {
+    visibility: visible;
+}
+
+.neighbourhood {
+    position: relative;
+    z-index: 2;
+}
+
+.formatted-address {
+    color: #451F6A;
+    margin: 0;
+}
+
+
+@media only screen and (max-width: 768px) {
+    .card {
+        border: none;
+        width: 300px;
+        margin: 20px auto;
+        min-width: 251px;
+        min-height: 235px;
+        max-width: 300px;
+        max-height: 300px;
+        transition: all 0.2s ease-in-out;
+    }
+
+}

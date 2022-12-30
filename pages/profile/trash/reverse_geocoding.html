@@ -1,0 +1,117 @@
+<!DOCTYPE html>
+<body>
+    <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyAv4TSlT_Tm-4Pi6x6_bkUZKgsfr_iFe5Q&callback=initMap&libraries=places&v=weekly" async defer></script>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.8.3/jquery.min.js"></script>
+
+    <div class="pac-card" id="pac-card">
+      <div>
+        <div id="title">Autocomplete search</div>
+        <div id="type-selector" class="pac-controls">
+          <input
+            type="radio"
+            name="type"
+            id="changetype-all"
+            checked="checked"
+          />
+          <label for="changetype-all">All</label>
+
+          <input type="radio" name="type" id="changetype-establishment" />
+          <label for="changetype-establishment">establishment</label>
+
+          <input type="radio" name="type" id="changetype-address" />
+          <label for="changetype-address">address</label>
+
+          <input type="radio" name="type" id="changetype-geocode" />
+          <label for="changetype-geocode">geocode</label>
+
+          <input type="radio" name="type" id="changetype-cities" />
+          <label for="changetype-cities">(cities)</label>
+
+          <input type="radio" name="type" id="changetype-regions" />
+          <label for="changetype-regions">(regions)</label>
+        </div>
+        <br />
+        <div id="strict-bounds-selector" class="pac-controls">
+          <input type="checkbox" id="use-location-bias" value="" checked />
+          <label for="use-location-bias">Bias to map viewport</label>
+
+          <input type="checkbox" id="use-strict-bounds" value="" />
+          <label for="use-strict-bounds">Strict bounds</label>
+        </div>
+      </div>
+      <div id="pac-container">
+        <input id="pac-input" type="text" placeholder="Enter a location" />
+      </div>
+    </div>
+
+    <div id="map" style="width:400px; height:400px"></div>
+    <div id="infowindow-content">
+      <span id="place-name" class="title"></span><br />
+      <span id="place-address"></span>
+    </div>
+
+    <!-- 
+     The `defer` attribute causes the callback to execute after the full HTML
+     document has been parsed. For non-blocking uses, avoiding race conditions,
+     and consistent behavior across browsers, consider loading using Promises
+     with https://www.npmjs.com/package/@googlemaps/js-api-loader.
+    -->
+    <script src="https://unpkg.com/axios/dist/axios.min.js"></script>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.8.3/jquery.min.js"></script>
+
+    <script>
+        var map;
+        chosenloc = 'Jurong East'
+        var prof_loc = encodeURI(chosenloc);
+        function initMap() {
+
+            coords = [1.296568, 103.852119];
+            
+            map = new google.maps.Map(
+                document.getElementById("map"),
+                {
+                    center: { lat: coords[0], lng: coords[1] },
+                    zoom: 17,
+                    mapTypeControl: false,
+                    //mapTypeID: google.maps.mapTypeID
+                }
+            );
+        }
+        var url = "https://maps.googleapis.com/maps/api/geocode/json?address=" + prof_loc + "&key=AIzaSyAv4TSlT_Tm-4Pi6x6_bkUZKgsfr_iFe5Q&region=SG";
+
+        axios.get(url)
+        .then(response => {
+            var lat = response.data.results[0].geometry.location['lat']
+            var lng = response.data.results[0].geometry.location['lng']
+            console.log('===ok at least this works===')
+            
+            const latlng = {
+                lat: parseFloat(lat),
+                lng: parseFloat(lng),
+            };
+            
+            const geocoder = new google.maps.Geocoder();
+
+            geocoder
+                .geocode({ location: latlng })
+                .then((response) => {
+                if (response.results[0]) {
+                    console.log("jhsafdgjfjk")
+                    const marker = new google.maps.Marker({
+                    position: latlng,
+                    map: map,
+                    });
+                    
+                    console.log(response.results[0].address_components[5].long_name)
+                } else {
+                    console.log("No results found");
+                }
+                })
+                .catch((e) => console.log("Geocoder failed due to: " + e));
+              
+        })
+        
+          
+
+    </script>
+    

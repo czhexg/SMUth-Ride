@@ -1,0 +1,75 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>Places Search Box</title>
+    <script src="https://polyfill.io/v3/polyfill.min.js?features=default"></script>
+    <script src="https://unpkg.com/axios/dist/axios.min.js"></script>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.8.3/jquery.min.js"></script>
+
+    <!-- playground-hide -->
+    <script>
+      const process = { env: {} };
+      process.env.GOOGLE_MAPS_API_KEY =
+        "AIzaSyAv4TSlT_Tm-4Pi6x6_bkUZKgsfr_iFe5Q";
+    </script>
+    <!-- playground-hide-end -->
+  </head>
+  <body>
+
+    <script>
+        var map;
+        var chosenloc = 'Jurong East'
+        var prof_loc = encodeURI(chosenloc);
+
+        var url =
+        "https://maps.googleapis.com/maps/api/geocode/json?address=" +
+        prof_loc +
+        "&key=AIzaSyAv4TSlT_Tm-4Pi6x6_bkUZKgsfr_iFe5Q";
+
+        axios.get(url)
+        .then(response => {
+            console.log(response.data)
+        })
+        coords = [1.296568, 103.852119]
+        
+        function initMap() {
+            map = new google.maps.Map(
+                document.getElementById("map"),
+                {
+                    center: { lat: coords[0], lng: coords[1] },
+                    zoom: 17,
+                    mapTypeControl: false,
+                    //mapTypeID: google.maps.mapTypeID
+                }
+            );
+            marker = new google.maps.Marker({
+                map,
+                draggable: true,
+                animation: google.maps.Animation.DROP,
+                position: { lat: coords[0], lng: coords[1]},
+                preserveViewport: true,
+            });
+        }
+        initMap()
+    </script>
+    <!-- 
+     The `defer` attribute causes the callback to execute after the full HTML
+     document has been parsed. For non-blocking uses, avoiding race conditions,
+     and consistent behavior across browsers, consider loading using Promises
+     with https://www.npmjs.com/package/@googlemaps/js-api-loader.
+    -->
+    <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyAv4TSlT_Tm-4Pi6x6_bkUZKgsfr_iFe5Q&region=SG&callback=initAutocomplete&libraries=places&v=weekly" async defer></script>
+    <input id="pac-input" class="controls" type="text" placeholder="AAAAAA" style="width:500px">
+    <script>
+        function initAutocomplete() {
+            const input = document.getElementById('pac-input')
+            const options = {
+                componentRestrictions: { country: "SG" },  
+                strictBounds: true, 
+            } 
+            const autocomplete = new google.maps.places.Autocomplete(input, options);
+            autocomplete.setTypes(['neighborhood'])
+        }
+    </script>
+  </body>
+</html>

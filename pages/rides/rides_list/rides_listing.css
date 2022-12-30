@@ -1,0 +1,74 @@
+
+
+h1 {
+    color: #4e7570;
+}
+
+
+.inputs {
+    position: relative;
+}
+
+input[type=text] {
+    background-color: #bedad6;
+    border-radius: 15px;
+}
+
+input[type=text]:focus {
+    background-color: #bedad6;
+    border-radius: 15px ;
+    box-shadow: 0 0 5px #4e7570;
+}
+
+.form-control {
+    text-indent: 15px;
+    border: none;
+    height: 45px;
+    width: 100%;
+    /*border: #ffba08 2px solid;*/
+}
+
+.form-control::placeholder {
+    text-align: center;
+}
+
+.bi-search {
+    position: absolute;
+    top: 12px;
+    left: 8px;
+    color: #4e7570;
+}
+
+.bi-plus-circle-fill {
+    font-size: 3rem;
+    color: #4e7570;
+}
+
+/* .bi-plus-circle-fill:hover {
+    transition: all 0.2s ease-in-out;
+    transform: scale(1.1);
+} */
+
+
+.bi-person-fill{
+    font-size: 32px;
+}
+
+#add_ride_icon{
+    position: fixed;
+    bottom: 5vh;
+    right: 5vh;
+    z-index: 5;
+    color: #4e7570;
+}
+#dateInput{
+    background: none;
+    border: none;
+    border-bottom: #4e7570 1px solid;
+    height: 30px;
+    width: 120px;
+    color: #4e7570;
+}
+#dateInput::-webkit-calendar-picker-indicator {
+    color: #4e7570;
+}

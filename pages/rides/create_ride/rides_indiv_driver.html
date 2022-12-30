@@ -1,0 +1,1379 @@
+<!DOCTYPE html>
+
+<!-- note to self to get some changes in the rides indiv driver
+        1. SMU where? scis? soe? sol?
+        2. Interactive? or make it next page?
+        3. Maybe put in where the default locations are actually at
+        4. this html is from the driver's perspective
+    -->
+
+<head>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    
+    <link
+    rel="icon"
+    type="image/x-icon"
+    href="../../../favicon_io/favicon.ico"
+/>
+    <!-- <link
+        href="https://cdn.jsdelivr.net/npm/bootstrap@5.2.2/dist/css/bootstrap.min.css"
+        rel="stylesheet"
+        integrity="sha384-Zenh87qX5JnK2Jl0vWa8Ck2rdkQ2Bzep5IDxbcnCeuOxjzrPF/et3URy9Bv1WTRi"
+        crossorigin="anonymous"
+    /> -->
+    <!-- <script src="asset/public.js?version={{lastModifiedDate('asset/public.js')}}"></script> -->
+    <script src="https://unpkg.com/vue@3/dist/vue.global.js"></script>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.2.2/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-Zenh87qX5JnK2Jl0vWa8Ck2rdkQ2Bzep5IDxbcnCeuOxjzrPF/et3URy9Bv1WTRi" crossorigin="anonymous">
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.2/dist/js/bootstrap.bundle.min.js" integrity="sha384-OERcA2EqjJCMA+/3y+gxIOqMEjwtxJY7qPCqsdltbNJuaOe923+mo//f6V8Qbsw3" crossorigin="anonymous"></script>
+    <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
+
+    <!-- <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.11.6/dist/umd/popper.min.js" integrity="sha384-oBqDVmMz9ATKxIep9tiCxS/Z9fNfEXiDAYTujMAeBAsjFuCZSmKbSSUnQlmh/jp3" crossorigin="anonymous"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.2/dist/js/bootstrap.min.js" integrity="sha384-IDwe1+LCz02ROU9k972gdyvl+AESN10+x7tBKgc9I5HFtuNz0wWnPclzo6p9vxnk" crossorigin="anonymous"></script> -->
+    <script>
+        function lastModifiedDate(url) {
+            try {
+                var req = new XMLHttpRequest();
+                req.open("HEAD", url, false);
+                req.send(null);
+                if (req.status == 200) {
+                    return req.getResponseHeader("Last-Modified");
+                } else return false;
+            } catch (er) {
+                return er.message;
+            }
+        }
+    </script>
+
+    <link rel="stylesheet" href="../../../main.css" />
+    <style>
+        #navbar_html {
+            margin-bottom: 20px;
+        }
+
+        .offer {
+            margin-top: 100px;
+        }
+
+        select,
+        option {
+            width: 200px;
+        }
+
+        #map {
+            height: 500px;
+            width: auto;
+            margin-bottom: 50px;
+            border-radius: 20px;
+        }
+
+        .wrong_loc {
+            font-size: 1rem;
+            font-weight: normal;
+            opacity: 0.7;
+            max-width: 100px;
+        }
+
+        .error {
+            background-color: coral;
+            display: none;
+            width: 500px;
+            height: 30px;
+        }
+
+        #id {
+            margin: 0;
+            display: block;
+            justify-content: center;
+        }
+
+        .error.display-error {
+            display: block;
+            justify-content: center;
+            text-align: center;
+            font-family: "Lucida Sans", "Lucida Sans Regular", "Lucida Grande",
+                "Lucida Sans Unicode", Geneva, Verdana, sans-serif;
+            border-radius: 10px;
+            transform: translateY(10px);
+            margin-top: 0;
+        }
+
+        #info_hover {
+            /* display: block; */
+            justify-content: right;
+            display: inline-block;
+        }
+
+        .error.display-error {
+            display: block;
+            justify-content: center;
+            text-align: center;
+            font-family: "Lucida Sans", "Lucida Sans Regular", "Lucida Grande",
+                "Lucida Sans Unicode", Geneva, Verdana, sans-serif;
+            border-radius: 10px;
+            transform: translateY(10px);
+            margin-top: 0;
+        }
+
+        .alert-info {
+            height: auto;
+            width: auto;
+            border-radius: 20px;
+            display: block;
+            justify-content: right;
+            position: absolute;
+            right: -22px;
+            bottom: 16px;
+        }
+
+        #info_hover > .tooltiptext { 
+            visibility: hidden;
+            width: 300px;
+            background-color: #BFACD3;
+            color: #451F6A;
+            text-align: center;
+            border-radius: 10px;
+            padding: 10px;
+
+            /* Position the tooltip */
+            position: absolute;
+            top: 40px;
+            left: -135px;
+            z-index: 1;
+        }
+
+        #info_hover:hover > .tooltiptext { 
+            visibility: visible;
+        }
+
+        @media only screen and (max-width: 414px) {
+            .tooltiptext {
+                display: none;
+            }
+          }
+
+        .group {
+            position: relative;
+            margin-bottom: 65px;
+            max-width: 75%;
+        }
+
+        .other-group {
+            position: relative;
+            margin-top: -30px;
+            margin-bottom: 60px;
+        }
+
+        .text-input {
+            margin: 0 auto;
+            font-size: calc(1.275rem + 0.3vw);
+            font-weight: 500;
+            height: 25px;
+            padding: 10px 10px 18px 5px;
+            /*display: flex;*/
+            width: 75%;
+            border: none;
+            outline: none;
+            border-bottom: 1px solid #4e7570;
+            color: #4e7570;
+            background: rgba(0, 0, 0, 0);
+            opacity: 1;
+            transition: 0.2s ease;
+        }
+
+        .bottom_text-input {
+            margin: 0 auto;
+            font-size: calc(1.275rem + 0.3vw);
+            font-weight: 500;
+            height: 25px;
+            padding: 10px 10px 18px 5px;
+            /*display: flex;*/
+            width: 100%;
+            border: none;
+            outline: none;
+            border-bottom: 1px solid #4e7570;
+            color: #4e7570;
+            background: rgba(0, 0, 0, 0);
+            opacity: 1;
+            transition: 0.2s ease;
+        }
+
+        .error {
+            padding: 10px;
+            display: none;
+        }
+
+        .getRoute-buttons {
+            min-width: 100px;
+            border-radius: 10px;
+            background-color: #4e7570;
+            color: #b1b1b1;
+            border-color: #b1b1b1;
+            display: inline-block;
+            padding-top: 2px;
+        }
+
+        .map-buttons {
+            position: relative;
+            display: inline-flex !important;
+            width: 60%;
+        }
+
+        .location {
+            margin-top: 36.8px;
+            margin-bottom: 0px;
+        }
+
+        .location-input {
+            font-size: calc(1.275rem + 0.3vw);
+            font-weight: 500;
+            height: 37px;
+            display: block;
+            min-width: 65%;
+            border: none;
+            left: 0px;
+            position: absolute;
+            outline: none;
+            border-bottom: 1px solid #4e7570;
+            color: #4e7570;
+            background: rgba(0, 0, 0, 0);
+            opacity: 1;
+            transition: 0.2s ease;
+        }
+
+        .text-address {
+            font-size: calc(1.275rem + 0.3vw);
+            font-weight: 500;
+            height: 25px;
+            padding: 10px 10px 18px 5px;
+            display: block;
+            width: 300px;
+            border: none;
+            outline: none;
+            border-bottom: 1px solid #4e7570;
+            color: #4e7570;
+            background: rgba(0, 0, 0, 0);
+            opacity: 1;
+            transition: 0.2s ease;
+        }
+
+        .text-input:focus {
+            outline: none;
+            opacity: 1;
+        }
+
+        .bottom_text-input:focus {
+            outline: none;
+            opacity: 1;
+        }
+
+        .cost-input {
+            padding-left: 17px;
+        }
+
+        .text-label {
+            color: #4e7570;
+            font-size: 1rem;
+            font-weight: normal;
+            position: absolute;
+            pointer-events: none;
+            left: 10px;
+            top: -10%;
+            opacity: 0.8;
+            transition: 0.2s ease all;
+            -moz-transition: 0.2s ease all;
+            -webkit-transition: 0.2s ease all;
+        }
+
+        .bottom_text-label {
+            color: #4e7570;
+            font-size: 1rem;
+            font-weight: normal;
+            position: absolute;
+            pointer-events: none;
+            left: 0px;
+            top: 0px;
+            opacity: 0.5;
+            transition: 0.2s ease all;
+            -moz-transition: 0.2s ease all;
+            -webkit-transition: 0.2s ease all;
+        }
+
+        .other-label {
+            color: #4e7570;
+            font-size: 1rem;
+            font-weight: normal;
+            position: absolute;
+            opacity: 0.5;
+            left: 0px;
+            transition: 0.2s ease all;
+        }
+
+        .custom-tooltip {
+            --bs-tooltip-bg: #4e7570;
+            --bs-tooltip-max-width: 100%;
+        }
+
+        .date-label {
+            color: #4e7570;
+            font-size: 1rem;
+            font-weight: normal;
+            position: absolute;
+            opacity: 0.5;
+            left: 0px;
+            top: -30px;
+            transition: 0.2s ease all;
+        }
+
+        .date_alert {
+            font-size: 1rem;
+            font-weight: normal;
+            position: absolute;
+            opacity: 0.7;
+            left: 0px;
+            bottom: -22px;
+        }
+
+        .datetime-input {
+            color: black;
+            filter: invert(43%) sepia(18%) saturate(645%) hue-rotate(123deg)
+                brightness(91%) contrast(85%);
+        }
+
+        .number-input {
+            filter: invert(94%) sepia(11%) saturate(369%) hue-rotate(117deg)
+                brightness(90%) contrast(91%);
+        }
+
+        .currencyinput {
+            position: absolute;
+            font-size: calc(1.275rem + 0.3vw);
+            font-weight: 500;
+            color: #4e7570;
+            bottom: 2px;
+        }
+
+        /* active state */
+        .bottom_text-input:focus ~ .bottom_text-label,
+        .bottom_text-input:valid ~ .bottom_text-label {
+            top: -30px;
+            font-size: 1rem;
+            color: #4e7570;
+            opacity: 0.8;
+        }
+
+        /* .text-input:focus ~ .text-label,
+        .text-input:valid ~ .text-label {
+            top: -10%;
+            font-size: 1rem;
+            color: #4e7570;
+            opacity: 0.8;
+        } */
+
+        .highlight {
+            position: absolute;
+            height: 60%;
+            width: 100px;
+            top: 25%;
+            left: 0;
+            pointer-events: none;
+            opacity: 0.5;
+        }
+
+        /* active state */
+        input:focus ~ .highlight {
+            -webkit-animation: inputHighlighter 0.3s ease;
+            -moz-animation: inputHighlighter 0.3s ease;
+            animation: inputHighlighter 0.3s ease;
+        }
+
+        /* for the popup when clicked on*/
+        .popup {
+            position: relative;
+            display: inline-block;
+            cursor: pointer;
+            -webkit-user-select: none;
+            -moz-user-select: none;
+            -ms-user-select: none;
+            user-select: none;
+            z-index: 9;
+          }
+          
+          /* The actual popup */
+          .popup .popuptext {
+            visibility: hidden;
+            width: 300px;
+            max-width: 300px;
+            background-color: #BFACD3;
+            color: #451F6A;
+            text-align: center;
+            border-radius: 10px;
+            padding: 10px;
+            position: absolute;
+            top: 40px;
+            left: -135px;
+            z-index: 9;
+            width: 300px;
+          }
+
+        .popup .show {
+            visibility: visible;
+            -webkit-animation: fadeIn 1s;
+            animation: fadeIn 1s;
+            z-index: 99;
+          }
+
+        @media only screen and (max-width: 414px) {
+        .popup .popuptext {
+            width: 200px;
+            }
+        }
+
+        /* ANIMATIONS ================ */
+        @-webkit-keyframes inputHighlighter {
+            from {
+                background: #b1b1b1;
+            }
+            to {
+                width: 0;
+                background: transparent;
+            }
+        }
+        @-moz-keyframes inputHighlighter {
+            from {
+                background: #b1b1b1;
+            }
+            to {
+                width: 0;
+                background: transparent;
+            }
+        }
+        @keyframes inputHighlighter {
+            from {
+                background: #b1b1b1;
+            }
+            to {
+                width: 0;
+                background: transparent;
+            }
+        }
+
+        .form-check-input:checked {
+            background-color: #4e7570;
+            border-color: #4e7570;
+        }
+
+        #SMU_label {
+            position: absolute;
+            left: 6%;
+            top: -10%;
+            z-index: 0;
+            color: #4e7570;
+        }
+        @media (max-width: 768px) {
+            #SMU_label {
+                position: absolute;
+                left: 3%;
+                top: -5%;
+                z-index: 0;
+                color: #4e7570;
+            }
+            .smu-location{ 
+                width: 100% !important;
+            }
+            #arrow {
+                transform: rotate(90deg);
+            }
+            .inputs-div { 
+                width: 100% !important;
+                margin-left: auto;
+                margin-right: auto;
+            }
+            .location-input {
+                font-size: calc(1.275rem + 0.3vw);
+                font-weight: 500;
+                width: calc(100% - 24px) !important;
+                padding-left: 12px;
+                padding-right: 12px;
+                height: 37px;
+                display: block;
+                border: none;
+                left: 0px;
+                position: absolute;
+                outline: none;
+                border-bottom: 1px solid #4e7570;
+                color: #4e7570;
+                background: rgba(0, 0, 0, 0);
+                opacity: 1;
+                transition: 0.2s ease;
+                margin-left: 12px;
+            }
+            .date_alert_overflow { 
+                top: 25px;
+            }
+            .getRoute-buttons {
+                width: 80%;
+                border-radius: 10px;
+                background-color: #4e7570;
+                color: #b1b1b1;
+                border-color: #b1b1b1;
+                display: inline-block;
+                padding-top: 2px;
+            }
+        }
+
+        @media (max-width: 992px) {
+            .map-buttons { 
+                display: inline-flex !important;
+                width: 75% !important;
+            }
+        }
+        .dropdowns {
+            font-size: calc(1.275rem + 0.3vw);
+            font-weight: 500;
+            height: 37px;
+            display: block;
+            width: 100%;
+            border: none;
+            outline: none;
+            border-bottom: 1px solid #4e7570;
+            color: #4e7570;
+            background: rgba(0, 0, 0, 0);
+            opacity: 1;
+            transition: 0.2s ease;
+        }
+
+        @media (min-width: 768px) {
+            .smu-location { 
+                width: 150px !important;
+                margin-right: 0px !important;
+            }
+        }
+        .dropdown-time { 
+            width: 60px;
+            margin-right: 0px !important;
+            display: inline;
+        }
+        .time-input { 
+            text-align: left;
+        }
+        .location_alert {
+            opacity: 0.7;
+            position: absolute;
+            bottom: 0;
+            left: 0;
+        }
+
+        .change_date {
+            position: absolute;
+            bottom: -20px;
+            left: 0px
+        }
+
+        .rotate-forward {
+            animation: rotate-180-cw 0.15s cubic-bezier(0.25, 0.46, 0.45, 0.94)
+                both;
+        }
+
+        @keyframes rotate-180-cw {
+            0% {
+                transform: rotate(0deg);
+            }
+            100% {
+                transform: rotate(180deg);
+            }
+        }
+
+        .rotate-backward {
+            animation: rotate-180-back 0.15s
+                cubic-bezier(0.25, 0.46, 0.45, 0.94) both;
+        }
+
+        @keyframes rotate-180-back {
+            0% {
+                transform: rotate(180deg);
+            }
+            100% {
+                transform: rotate(360deg);
+            }
+        }
+
+        .rotate-top {
+            animation: rotate-180-top 0.15s cubic-bezier(0.25, 0.46, 0.45, 0.94)
+                both;
+        }
+
+        @keyframes rotate-180-top {
+            0% {
+                transform: rotate(90deg);
+            }
+            100% {
+                transform: rotate(270deg);
+            }
+        }
+
+        .rotate-down {
+            animation: rotate-180-down 0.15s
+                cubic-bezier(0.25, 0.46, 0.45, 0.94) both;
+        }
+
+        @keyframes rotate-180-down {
+            0% {
+                transform: rotate(270deg);
+            }
+            100% {
+                transform: rotate(90deg);
+            }
+        }
+
+        .inputs-div { 
+            width: 50%;
+            margin-left: auto;
+            margin-right: auto;
+        }
+    </style>
+
+    <link rel="stylesheet" href="../../../navbar/nav_styles.css" />
+</head>
+<body>
+    <div id="navbarVue">
+        <div data-page="rides"></div>
+    </div>
+    <div id="form_alerts">
+        
+        
+        <div class="offer d-flex justify-content-evenly">
+            <h1 class="mb-2 pb-3">Offer a ride</h1>
+            <!--            <button></button>-->
+            <!-- <button
+                type="button"
+                class="btn btn-floating"
+                data-mdb-ripple-color="dark"
+                onclick="rotate_location()"
+                style="
+                    border-radius: 50%;
+                    width: 30px;
+                    height: 30px;
+                    background-color: #4e7570;
+                    position: relative;
+                "
+                id="bottomtip"
+                title="Change Direction"
+            >
+                <i
+                    class="bi bi-arrow-repeat"
+                    style="
+                        position: absolute;
+                        top: 10%;
+                        right: 20%;
+                        color: white;
+                    "
+                ></i>
+            </button> -->
+        </div>
+
+        <!-- this div section handles the selection between SMU and Location -->
+
+        <!--    <div class="trip d-flex mt-3 justify-content-evenly" style="position: relative" >-->
+        <!--        <div class="d-flex flex-wrap" style="width:30px">-->
+
+        <!--        </div>-->
+        <!--        &lt;!&ndash; dropdown list of all the buildings &ndash;&gt;-->
+        <!--        <div class="d-flex flex-wrap h2" id="location_from">-->
+        <!--            <div class="">-->
+        <!--                SMU-->
+        <!--            </div>-->
+        <!--        </div>-->
+        <!--       -->
+        <!--        &lt;!&ndash; GET from input &ndash;&gt;-->
+        <!--       -->
+
+        <!--    </div>-->
+        <div class="d-flex row my-2 mb-4 justify-content-evenly inputs-div">
+            <div class="col-xs-12 col-md-5 py-4 d-block justify-content-center" style="position: relative;  margin-right: 0px;">
+                <label for="smubuildings" id="SMU_label">School</label>
+                <select
+                    name="smubuildings"
+                    id="smulocation"
+                    onchange="getSMUloc()"
+                    v-model="school_input"
+                    class="dropdowns"
+                >
+                <!-- ken ming remoed "go home" -->
+                    <option
+                        value="0"
+                        class="opacity-50"
+                        hidden
+                        selected
+                    >
+                        Select School
+                    </option>
+                    <option value="Singapore 178902,SCIS">SCIS</option>
+                    <option value="Singapore 178903,SOE">SOE</option>
+                    <option value="55 Armenian St Singapore 179943,SOL"> SOL </option>
+                    <option value="Singapore 178900,SOA">SOA</option>
+                    <option value="Singapore 178899,SOB">SOB</option>
+                    <option value="Singapore 179873,SOSS">SOSS</option>
+                </select>
+                <!--                    <label class="location_alert text-danger " role="alert"-->
+                <!--                           v-if="document.getElementsByTagName('select')[0].value=='0'">-->
+                <!--                        Please select a School*-->
+                <!--                    </label>-->
+            </div>
+
+            <div class="col-md-2" id="arrow" style="position: relative;  margin-right: 0px;">
+                <!-- whats this div for -->
+                <div style="height: 40px"></div> 
+                <svg
+                    xmlns="http://www.w3.org/2000/svg"
+                    width="30"
+                    height="30"
+                    fill="#4e7570"
+                    class="bi bi-arrow-right"
+                    viewBox="0 0 16 16"
+                    style="
+                        position: absolute;
+                        top: 50%;
+                        left: 50%;
+                        transform: translate(-50%, -50%);
+                    ">
+                    <path
+                        fill-rule="evenodd"
+                        d="M1 8a.5.5 0 0 1 .5-.5h11.793l-3.147-3.146a.5.5 0 0 1 .708-.708l4 4a.5.5 0 0 1 0 .708l-4 4a.5.5 0 0 1-.708-.708L13.293 8.5H1.5A.5.5 0 0 1 1 8z"
+                    />
+                </svg>
+            </div>
+
+            <div class="col-xs-12 col-md-5 py-4 d-block justify-content-center" style="position: relative;  margin-right: 0px;">
+                <div class="d-block-inline justify-content-center" >
+                    <input type="text" class="location-input text-input" name="location-input" id="location_field" onclick="frequency_click()" required="false" v-model="location_input"/>
+                    <span class="highlight"></span>
+                    <label class="text-label" id="address-text"
+                        >Drop off address</label
+                    >
+                    <label
+                                                class="location_alert text-danger"
+                                                id="loc_alert"
+                                                role="alert"
+                                                v-if="location_alert"
+                                        >
+                                            Please input an address
+                                        </label>
+                </div>
+
+            </div>
+        </div>
+
+    <div class="text-center container">
+        <div class="row d-flex justify-content-center " style="position: relative;">
+            <div class="w-50 map-buttons mt-3 mb-4 mx-auto text-center d-block-inline justify-content-center">
+                <button
+                    type="button"
+                    class="btn button w-50 d-block text-center getRoute-buttons justify-content-center mx-2"
+                    data-mdb-ripple-color="dark"
+                    onclick="rotate_location()"
+                    id="bottomtip"
+                    title="Change Direction"
+                >Switch directions!
+                </button>
+                <button
+                    type="button"
+                    id="getRoute"
+                    value="Find route!"
+                    v-bind:disabled="location_input.length == 0"
+                    class="btn button w-50 d-block text-center getRoute-buttons justify-content-center mx-2"
+                    onclick="calcRoute()"
+                >Find route!</button>
+                <div id="info_hover" class="my-auto popup"
+                     ></div>
+            </div>
+            <!-- <div id="info_hover"></div> -->
+        </div>
+        <!-- MAP MAP MAP MAP MAP MAP MAP MAP -->
+
+        <div id="map" class="mx-auto border-round w-75"></div>
+        <!-- <script src="http://maps.googleapis.com/maps/api/js?sensor=false"></script>  -->
+        <script
+            src="https://maps.googleapis.com/maps/api/js?key=API_KEY_HERE&callback=initMap"
+            type="text/javascript" async defer
+        ></script>
+        <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.8.3/jquery.min.js"></script>
+
+        
+        <script>
+
+            var map;
+            function initMap() {
+                map = new google.maps.Map(
+                    document.getElementById("map"),
+                    {
+                        center: { lat: coords[0], lng: coords[1] },
+                        zoom: 17,
+                        mapTypeControl: false,
+                        //mapTypeID: google.maps.mapTypeID
+                    }
+                );
+
+                marker = new google.maps.Marker({
+                    map,
+                    draggable: true,
+                    animation: google.maps.Animation.DROP,
+                    position: { lat: coords[0], lng: coords[1] },
+                    preserveViewport: true,
+                });
+            }
+            //directionsDisplay
+            var chosenloc = document.getElementById("location_field").value;
+            var chosentrans = encodeURI(chosenloc);
+
+            smuLatLng = [];
+            coords = [1.296568, 103.852119]; // auto starts center at SCIS
+
+            // directionservice allows use of route method, directionrenderer displays the route
+
+            // creates the map
+
+            function getSMUloc() {
+                sch_value = document.getElementById("smulocation").value;
+                sch_deets = sch_value.split(",");
+                smutrans = encodeURI(sch_deets[0]);
+
+                var url = "https://maps.googleapis.com/maps/api/geocode/json?address=" + smutrans + "&key=API_KEY_HERE&region=SG";
+
+                var xhttp = new XMLHttpRequest();
+                xhttp.onreadystatechange = function () {
+
+                    if (this.readyState == 4 && this.status == 200) {
+                        try {
+                            var data = JSON.parse(this.responseText);
+
+                            var location =
+                                data["results"][0]["geometry"][
+                                    "location"
+                                ];
+                            console.log(location);
+                            smuLatLng = [
+                                location["lat"],
+                                location["lng"],
+                            ];
+                            console.log(smuLatLng);
+
+                            coords = [smuLatLng[0], smuLatLng[1]];
+
+                            initMap();
+                        } catch (err) {
+                            document.getElementById(
+                                "display"
+                            ).innerHTML =
+                                "Sorry, invalid address. Please try a valid address!";
+                        }
+                    } else if (
+                        this.readyState != 4 ||
+                        this.status != 200
+                    ) {
+                    }
+                };
+                xhttp.open("GET", url, true);
+                xhttp.send();
+            }
+            function showPopUp() {
+                var popup = document.getElementById('popupMessage');
+                popup.classList.toggle('show');
+                console.log('===CLICKED===')
+                console.log(popup)
+            }
+
+            function calcRoute() {
+                sch_value =
+                    document.getElementById("smulocation").value;
+                sch_deets = sch_value.split(",");
+
+                sch_postal = sch_deets[0];
+                sch_name = sch_deets[1];
+
+                if (smu_position == "from") {
+                    var request = {
+                        origin: sch_postal,
+                        destination:
+                            document.getElementById("location_field")
+                                .value,
+                        travelMode: google.maps.TravelMode["DRIVING"],
+                        unitSystem: google.maps.UnitSystem["METRIC"],
+                    };
+                    console.log("is it working???");
+                } else {
+                    var request = {
+                        origin: document.getElementById(
+                            "location_field"
+                        ).value,
+                        destination: sch_postal,
+                        travelMode: google.maps.TravelMode["DRIVING"],
+                        unitSystem: google.maps.UnitSystem["METRIC"],
+                    };
+                }
+
+                if (
+                    document.getElementById("info_hover").innerHTML !=
+                    ""
+                ) {
+                    console.log("===wtf===");
+                    directionsDisplay.setDirections({ routes: [] });
+                }
+
+                directionsService = new google.maps.DirectionsService();
+                directionsDisplay =
+                    new google.maps.DirectionsRenderer();
+
+                // restrict to singapore...ish
+                var strictBounds = [1.29027, 103.851959];
+
+                directionsDisplay.setOptions({
+                    polylineOptions: {
+                        strokeColor: "#4e7570",
+                    },
+                });
+
+                directionsService.route(
+                    request,
+                    function (result, status) {
+                        const info_hover =
+                            document.getElementById("info_hover");
+                        const loc_outofsg =
+                            document.querySelector("#wrongloc");
+
+                        if (status == "OK") {
+                            // get the distance of the route in km
+                            distance =
+                                result.routes[0].legs[0].distance.text;
+
+                            if (smu_position == "from") {
+                                loc_lat = result.routes[0].legs[0].end_location.lat(),
+                                loc_lng = result.routes[0].legs[0].end_location.lng();
+                            } else {
+                                loc_lat = result.routes[0].legs[0].start_location.lat(),
+                                loc_lng = result.routes[0].legs[0].start_location.lng();
+                            }
+                            api_url = `https://maps.googleapis.com/maps/api/geocode/json?latlng=${loc_lat},${loc_lng}&key=API_KEY_HERE`
+                            axios.get(api_url)
+                            .then(response => { 
+                                address_details = response.data.results[0]
+                                formatted_address = address_details.formatted_address
+
+                                // Singapore Validation
+                                var is_sg = false
+                                var split_formatted_add = formatted_address.split(" ")
+                                if (split_formatted_add.includes('Singapore') || split_formatted_add.includes('Singapore,')){
+                                    is_sg = true
+                                }
+
+                                console.log(is_sg)
+                                if (!is_sg){
+                                    document.getElementById('rides').setAttribute('disabled', true)
+                                    return info_hover.innerHTML = `<div class='wrong_loc text-danger mx-2 text-nowrap d-block' >Invalid location</div>`;
+                                }
+
+                                console.log(formatted_address)
+                                if (formatted_address.includes("+")) { 
+                                    address_details = response.data.results[1]
+                                    formatted_address = address_details.formatted_address
+                                    console.log(formatted_address)
+                                }
+                                var neighbourhood = formatted_address
+                                var country = "SG"
+                                console.log(address_details.address_components)
+                                for (var add of address_details.address_components) { 
+                                    if (add.types.includes('neighborhood')) { 
+                                        neighbourhood = add.long_name
+                                    }
+                                    if (add.types.includes('country')) { 
+                                        country = add.short_name
+                                    }
+                                }
+                                document.getElementById("hidden_formatted_address").value = formatted_address
+                                document.getElementById("hidden_neighbourhood").value = neighbourhood
+
+
+                                if (1.15948 > loc_lat ||loc_lat > 1.47475) {
+                                loc_outofsg.innerHTML = `<div class='wrong_loc text-danger'>Can you put some location within Singapore .</div>`;
+                            } 
+                            else if (103.60468 > loc_lng || loc_lat > 104.08872) {
+                                loc_outofsg.innerHTML = `<div class='wrong_loc text-danger'>Can you put some location within Singapore .</div>`;
+                            } 
+                            else {
+                                // get distance of route in min
+                                duration = parseInt(result.routes[0].legs[0].duration.text.split(" "));
+                                recc_price = parseInt(distance) * 0.15 + 2.8 + duration * 0.15;
+
+                                // from smu to indicated location, display route and duration
+                                if (smu_position == "from") {
+                                    info_hover.innerHTML = `<svg xmlns="http://www.w3.org/2000/svg"
+                                                                width='30'
+                                                                height='30'
+                                                                viewBox="0 0 512 512"
+                                                                fill="#4e7570"
+                                                                class='popup'
+                                                                onclick='showPopUp()'>
+                                                                <path d="M256 512c141.4 0 256-114.6 256-256S397.4 0 256 0S0 114.6 0 256S114.6 512 256 512zM216 336h24V272H216 192V224h24 48 24v24 88h8 24v48H296 216 192V336h24zm72-144H224V128h64v64z"/>
+                                                            </svg>
+                                                            <span class="tooltiptext">
+                                                                From: <b>${sch_name}</b>
+                                                                <br>To: <b>${formatted_address}</b>
+                                                                <br>Driving distance: <b>${distance}</b>
+                                                                <br>Recommended Pricing: <b>$${recc_price.toFixed(2)}</b>
+                                                                <br>Duration: <b>${result.routes[0].legs[0].duration.text}</b>
+                                                            </span>
+                                                            <span class="popuptext" id='popupMessage'>
+                                                                From: <b>${sch_name}</b>
+                                                                <br>To: <b>${formatted_address}</b>
+                                                                <br>Driving distance: <b>${distance}</b>
+                                                                <br>Recommended Pricing: <b>$${recc_price.toFixed(2)}</b>
+                                                                <br>Duration: <b>${result.routes[0].legs[0].duration.text}</b>
+                                                            </span>`   
+                                    marker.setMap(null);
+                                    directionsDisplay.setMap(null);
+                                    directionsDisplay.setDirections({
+                                        routes: [],
+                                    });
+
+                                    directionsDisplay.setDirections(
+                                        result
+                                    );
+                                    directionsDisplay.setMap(map);
+                                }
+                                // from indicated to smu, display route and duration
+                                else { 
+                                    info_hover.innerHTML = `<svg xmlns="http://www.w3.org/2000/svg"
+                                                                width='30'
+                                                                height='30'
+                                                                viewBox="0 0 512 512"
+                                                                fill="#4e7570"
+                                                                class='popup'
+                                                                onclick='showPopUp()'>
+                                                                <path d="M256 512c141.4 0 256-114.6 256-256S397.4 0 256 0S0 114.6 0 256S114.6 512 256 512zM216 336h24V272H216 192V224h24 48 24v24 88h8 24v48H296 216 192V336h24zm72-144H224V128h64v64z"/>
+                                                            </svg>
+                                                            <span class="tooltiptext">
+                                                                From: <b>${formatted_address}</b>
+                                                                <br>To: <b>${sch_name}</b>
+                                                                <br>Driving distance: <b>${distance}</b>
+                                                                <br>Recommended Pricing: <b>$${recc_price.toFixed(2)}</b>
+                                                                <br>Duration: <b>${result.routes[0].legs[0].duration.text}</b>
+                                                            </span>
+                                                            <span class="popuptext" id='popupMessage'>
+                                                                From: <b>${formatted_address}</b>
+                                                                <br>To: <b>${sch_name}</b>
+                                                                <br>Driving distance: <b>${distance}</b>
+                                                                <br>Recommended Pricing: <b>$${recc_price.toFixed(2)}</b>
+                                                                <br>Duration: <b>${result.routes[0].legs[0].duration.text}</b>
+                                                            </span>`   
+
+                                    marker.setMap(null);
+                                    directionsDisplay.setMap(null);
+
+                                    directionsDisplay.setDirections(
+                                        result
+                                    );
+                                    directionsDisplay.setMap(map);
+
+                                    // const tooltipTriggerList =
+                                    //     document.querySelectorAll(
+                                    //         '[data-bs-toggle="tooltip"]'
+                                    //     );
+                                    // const tooltipList = [
+                                    //     ...tooltipTriggerList,
+                                    // ].map(
+                                    //     (tooltipTriggerEl) =>
+                                    //         new bootstrap.Tooltip(
+                                    //             tooltipTriggerEl
+                                    //         )
+                                    // );
+                                }
+                            }
+                            })
+                            .catch(error => {
+                                console.log(error.message)
+                            })
+
+                            
+                        } 
+                        else {
+                            directionsDisplay.setDirections({
+                                routes: [],
+                            });
+
+                            map.setCenter(coords[0], coords[1]);
+
+                            // error message for invalid address
+                            info_hover.innerHTML = `<div class='wrong_loc text-danger mx-2 text-nowrap' style='opacity: 0.8'>Invalid location</div>`;
+                        }
+                    }
+                );
+                // function ends here
+            }
+            // autocomplete objects for all input
+            
+            // var options = {
+            //     types: ["(cities)"],
+            // };
+
+            // var input1 = document.getElementById("smulocation");
+            // var autocomplete1 = new google.maps.places.Autocomplete(
+            //     input1,
+            //     options
+            // );
+
+            // var input2 = document.getElementById("location_field");
+            // var autocomplete2 = new google.maps.places.Autocomplete(
+            //     input2,
+            //     options
+            // );
+        </script>
+    </div>
+    <div class="container text-center inputs-div">
+        <div class="group mx-auto" id="cost_group">
+            <span class="currencyinput" id="dollarsign"></span>
+            <input
+                id="inputMoney"
+                type="number"
+                name="cost"
+                min="0"
+                step="0.01"
+                class="bottom_text-input cost-input"
+                oninput="cost_click(); validity.valid||(value='');"
+                required
+                v-model="cost"
+            />
+            <span class="highlight"></span>
+            <label for="inputMoney" class="bottom_text-label">Cost per person</label>
+            <span
+                class="date_alert date_alert_overflow text-danger"
+                role="alert"
+                v-if="cost == '' && cost != 'initial' || cost == 0"
+            >
+                Cost per person should be larger than $0
+        </span>
+        
+        </div>
+        
+        <div class="group mx-auto">
+            <input
+                type="number"
+                name="capacity"
+                min="1"
+                max="10"
+                class="text-input bottom_text-input"
+                oninput="validity.valid||(value='');"
+                required
+            />
+            <span class="highlight"></span>
+            <label class="bottom_text-label">Seat capacity per ride</label>
+        </div>
+        <div class="group mx-auto">
+            <input type="hidden" id="hidden_formatted_address">
+            <input type="hidden" id="hidden_neighbourhood">
+            <input
+                type="date"
+                name="date"
+                class="bottom_text-input datetime-input"
+
+                v-bind:min="today"
+                oninput="date_click()"
+                v-model="date"
+                required
+            />
+
+            <label class="date-label" id="date-label">Date</label>
+            <label
+                class="date_alert date_alert_overflow text-danger"
+                role="alert"
+
+                v-if="check_date()"
+            >
+                Please select a date not more than 1 year from today
+            </label>
+            <label
+                        class="change_date date_alert text-danger"
+                        role="alert"
+                        v-if="change_date"
+                    >
+                        Please input a date*
+                    </label>
+        </div>
+        <div class="group mx-auto">
+            <!-- <input
+                type="time"
+                name="time"
+                class="bottom_text-input datetime-input"
+                v-bind:min="time_now"
+                v-model="time"
+                oninput="time_click()"
+                required
+                step= "300"
+            /> -->
+            <time-input  :date="date" :allowable_date="allowable_date" :allowable_time="allowable_time" @checking_time = "checking_time"></time-input>
+            <span class="highlight"></span>
+            <label class="date-label" id="time-label">Time</label>
+            <!-- <label
+                    class="date_alert text-danger w-75"
+                    role="alert"
+
+                    v-if="check_time()"
+            >
+                You cant time travel.. Please choose a later timing *
+            </label> -->
+        </div>
+        <!-- {{allowable_time}} -->
+        <button
+            type="submit"
+            class="btn button d-block mx-auto mt-5 w-75 mb-5"
+            id="rides"
+            v-bind:disabled="(date.length == '') || (location_input == '') || (just_stop =='no') || (allowable_time == false)"
+        >
+        <!-- this disable button needs to be modified as well -->
+            Create your SMUth Ride!
+        </button>
+<!--            </form>-->
+        <!-- <div class="modal fade" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-modal="true"
+            role="dialog">
+            <div class="modal-dialog modal-dialog-centered" role="document">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title " id="exampleModalLabel">Success!</h5>
+                    </div>
+                    <div class="modal-body">
+                        Your ride has been successfully created!
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-secondary" onclick="location.href='./../create_ride/rides_indiv_driver.html'" >Create New Ride</button>
+                        <button type="button" class="btn btn-primary" onclick="location.href='./../rides_list/rides_listing.html'" >Return To Listings</button>
+                    </div>
+                </div>
+            </div>
+        </div> -->
+    </div>
+    <script>
+        //huh = new Date().toLocaleTimeString('en-GB').split(":").slice(0, 2)
+        //huh1 = parseInt(huh[0]) + 1
+        //huh[0] = huh1.toString()
+        //huh = huh.join(':')
+        //console.log(huh)
+
+    </script>
+</div>
+</body>
+
+
+<script>
+    username = "bob";
+    email = "bob@hello.com"; // this username can be read in the riders_indiv_driver.js file
+</script>
+
+<script type="module" src="../../../index.js"></script>
+<script type="module" src="./rides_indiv_driver.js"></script>
+
+<script>
+    var smu_position = "from";
+    var small = window.innerWidth < 768;
+
+    window.addEventListener("resize", (event) => {
+        let current_width = window.innerWidth;
+        if (current_width < 768 && !small) {
+            small = true;
+            rotate_location();
+            setTimeout(() => {
+                rotate_location();
+            }, 300);
+        } else if (current_width >= 768 && small) {
+            small = false;
+            rotate_location();
+            setTimeout(() => {
+                rotate_location();
+            }, 300);
+        }
+    });
+
+    function frequency_click() {
+        document.getElementById("location_field").style = "opacity:1";
+    }
+
+    function date_click() {
+        document.getElementById("date-label").style = "opacity:0.8";
+    }
+
+    function time_click() {
+        document.getElementById("time-label").style = "opacity:0.8";
+    }
+
+    function cost_click() {
+        document.getElementById("dollarsign").innerHTML = "$";
+    }
+
+    function rotate_location() {
+        if (smu_position == "from") {
+            if (window.innerWidth > 768) {
+                document.getElementById("arrow").classList.remove("rotate-top");
+                document
+                    .getElementById("arrow")
+                    .classList.remove("rotate-down");
+                document
+                    .getElementById("arrow")
+                    .classList.remove("rotate-backward");
+                document
+                    .getElementById("arrow")
+                    .classList.add("rotate-forward");
+            } else {
+                document
+                    .getElementById("arrow")
+                    .classList.remove("rotate-forward");
+                document
+                    .getElementById("arrow")
+                    .classList.remove("rotate-down");
+                document
+                    .getElementById("arrow")
+                    .classList.remove("rotate-backward");
+                document.getElementById("arrow").classList.add("rotate-top");
+            }
+
+            document.getElementById("address-text").innerHTML =
+                "Pick up address";
+            smu_position = "to";
+        } else {
+            if (window.innerWidth > 768) {
+                document.getElementById("arrow").classList.remove("rotate-top");
+                document
+                    .getElementById("arrow")
+                    .classList.remove("rotate-down");
+                document
+                    .getElementById("arrow")
+                    .classList.remove("rotate-forward");
+                document
+                    .getElementById("arrow")
+                    .classList.add("rotate-backward");
+            } else {
+                document
+                    .getElementById("arrow")
+                    .classList.remove("rotate-forward");
+                document.getElementById("arrow").classList.remove("rotate-top");
+                document
+                    .getElementById("arrow")
+                    .classList.remove("rotate-backward");
+                document.getElementById("arrow").classList.add("rotate-down");
+            }
+            document.getElementById("arrow").classList.remove("rotate-forward");
+            document.getElementById("arrow").classList.add("rotate-backward");
+            document.getElementById("address-text").innerHTML =
+                "Drop off address";
+            smu_position = "from";
+        }
+    }
+
+</script>
+<!-- <script
+    src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.2/dist/js/bootstrap.bundle.min.js"
+    integrity="sha384-OERcA2EqjJCMA+/3y+gxIOqMEjwtxJY7qPCqsdltbNJuaOe923+mo//f6V8Qbsw3"
+    crossorigin="anonymous"
+></script> -->
+<script>
+    const tooltipTriggerList = document.querySelectorAll('[data-bs-toggle="tooltip"]')
+const tooltipList = [...tooltipTriggerList].map(tooltipTriggerEl => new bootstrap.Tooltip(tooltipTriggerEl))
+</script>
+
+<script type="module" src="../../../navbar/navbar.js"></script>
