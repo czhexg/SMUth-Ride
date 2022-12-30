@@ -3,7 +3,7 @@ AY22/23 Sem 1 WAD2 Project
 - Group members: Adrianus, Bernice, Keith, Ken Ming, Regine, Zhe Xiang
 - It is recommended to use a Macbook / macOS and Chrome browser to view our platform
 
-Visiting the website 
+Visiting the website (https://bernicesmu.github.io/SMUthRide/)
 - User is brought to the home page of the webpage on first load. This is also the landing page. 
 - User is not logged in yet. Click on the login tab in the navbar to navigate to the Registration / Login page
 - Alternatively, you can hover over the button "Start your Journey" to access the Registration / Login page
