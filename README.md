@@ -1,4 +1,5 @@
 # SMUthRide
+Original github repository - https://github.com/bernicesmu/SMUthRide/
 AY22/23 Sem 1 WAD2 Project
 - Group members: Adrianus, Bernice, Keith, Ken Ming, Regine, Zhe Xiang
 - It is recommended to use a Macbook / macOS and Chrome browser to view our platform
